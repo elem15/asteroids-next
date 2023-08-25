@@ -6,7 +6,7 @@ export default function Home() {
   const [date, setDate] = useState(currentDate)
   const [prevDate, setPrevDate] = useState(currentDate)
   const [nextDate, setNextDate] = useState(currentDate)
-  const [asteroids, setAsteroids] = useState(null)
+  const [asteroids, setAsteroids] = useState([])
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     async function getData(date: string) {
@@ -17,12 +17,11 @@ export default function Home() {
         throw new Error('Failed to fetch data')
       }
       const data = await response.json()
-      console.log(data)
       setNextDate(data.links.next.split('=')[1].split('&')[0])
       if (date !== currentDate) {
         setPrevDate(data.links.prev.split('=')[1].split('&')[0])        
       }
-      setAsteroids(data['near_earth_objects'][date])
+      setAsteroids(prev => ([...prev, ...data['near_earth_objects'][date]]))
       setLoading(false)
     }    
     getData(date)
@@ -30,12 +29,13 @@ export default function Home() {
   return (
     <div>
       <h1>Asteroids</h1>
-      <button onClick={() => setDate(date !== currentDate ? prevDate : date)}>Prev</button> | 
+      <div style={{position: 'fixed'}}>
       <button onClick={() => setDate(nextDate)}>Next</button>
+      </div>
       <div>{ nextDate }</div>
       <div>{ prevDate }</div>
       <ul>
-        {!loading && asteroids && asteroids.map((item) => <li key={item.id}>{item.name}</li>) }
+        {asteroids && asteroids.map((item) => <li key={item.id}>{item.name}</li>) }
       </ul>
     </div>
   )
