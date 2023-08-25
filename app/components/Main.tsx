@@ -5,8 +5,6 @@ import AsteroidList from './AsteroidList';
 export default function Main() {
   const currentDate = useMemo(() => (new Date()).toJSON().slice(0, 10), []);
   const [date, setDate] = useState(currentDate);
-  const [prevDate, setPrevDate] = useState(currentDate);
-  const [nextDate, setNextDate] = useState(currentDate);
   const [asteroids, setAsteroids] = useState<Asteroid[]>([]);
   const [loading, setLoading] = useState(false);
   const observerTarget = useRef(null);
@@ -20,10 +18,7 @@ export default function Main() {
         throw new Error('Failed to fetch data');
       }
       const data: ResponseData = await response.json();
-      setNextDate(data.links.next.split('=')[1].split('&')[0]);
-      if (date !== currentDate) {
-        setPrevDate(data.links.prev.split('=')[1].split('&')[0]);
-      }
+      setDate(data.links.next.split('=')[1].split('&')[0]);
       setAsteroids(prev => ([...prev, ...data['near_earth_objects'][date]]));
       setLoading(false);
     }
@@ -46,11 +41,9 @@ export default function Main() {
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [date, currentDate, observerTarget]);
+  }, [date, observerTarget]);
   return (
     <div>
-      <div>{nextDate}</div>
-      <div>{prevDate}</div>
       <AsteroidList asteroids={asteroids} />
       {loading && <div>Loading...</div>}
       <div ref={observerTarget}></div>
