@@ -3,29 +3,32 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import AsteroidList from './AsteroidList';
 
 export default function Main() {
-  const currentDate = useMemo(() => (new Date()).toJSON().slice(0, 10), []);
-  const [date, setDate] = useState(currentDate);
+  const currentDate = new Date().toJSON().slice(0, 10);
   const [asteroids, setAsteroids] = useState<Asteroid[]>([]);
   const [loading, setLoading] = useState(false);
   const observerTarget = useRef(null);
-
   useEffect(() => {
-    async function getData(date: string) {
+    async function reset() {
+      await fetch(`/api?date=${currentDate}`);
+    }
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
+    async function getData() {
       setLoading(true);
-      const response = await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&end_date=${date}&api_key=DEMO_KEY`);
-
+      const response = await fetch('/api');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
-      const data: ResponseData = await response.json();
-      setDate(data.links.next.split('=')[1].split('&')[0]);
-      setAsteroids(prev => ([...prev, ...data['near_earth_objects'][date]]));
+      const data: Asteroid[] = await response.json();
+      setAsteroids(data);
       setLoading(false);
     }
     const observer = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting) {
-          getData(date);
+          getData();
         }
       },
       { threshold: 1 }
@@ -37,11 +40,12 @@ export default function Main() {
 
     return () => {
       if (observerTarget.current) {
+        getData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [date, observerTarget]);
+  }, [observerTarget]);
   return (
     <div>
       <AsteroidList asteroids={asteroids} />
