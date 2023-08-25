@@ -6,7 +6,7 @@ export default function Home() {
   const [date, setDate] = useState(currentDate)
   const [prevDate, setPrevDate] = useState(currentDate)
   const [nextDate, setNextDate] = useState(currentDate)
-  const [asteroids, setAsteroids] = useState([])
+  const [asteroids, setAsteroids] = useState<Asteroid[]>([])
   const [loading, setLoading] = useState(false)
   useEffect(() => {
     async function getData(date: string) {
@@ -16,7 +16,7 @@ export default function Home() {
       if (!response.ok) {
         throw new Error('Failed to fetch data')
       }
-      const data = await response.json()
+      const data: ResponseData = await response.json()
       setNextDate(data.links.next.split('=')[1].split('&')[0])
       if (date !== currentDate) {
         setPrevDate(data.links.prev.split('=')[1].split('&')[0])        
