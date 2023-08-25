@@ -7,17 +7,19 @@ export default function Main() {
   const [asteroids, setAsteroids] = useState<Asteroid[]>([]);
   const [loading, setLoading] = useState(false);
   const observerTarget = useRef(null);
-  useEffect(() => {
-    async function reset() {
-      await fetch(`/api?date=${currentDate}`);
-    }
-    reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   async function reset() {
+  //     await fetch('/api/asteroids', {
+  //       method: 'DELETE',
+  //     });
+  //   }
+  //   reset();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
   useEffect(() => {
     async function getData() {
       setLoading(true);
-      const response = await fetch('/api');
+      const response = await fetch('/api/asteroids');
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

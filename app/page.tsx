@@ -1,10 +1,16 @@
-import Main from './components/Main';
+'use client';
+import { redirect } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <div>
-      <h1>Asteroids</h1>
-      <Main />
-    </div>
-  );
+  useEffect(() => {
+    async function reset() {
+      const response = await fetch('/api/asteroids', {
+        method: 'DELETE',
+      });
+      return response.json();
+    }
+    reset();
+    redirect('/asteroids');
+  }, []);
 }

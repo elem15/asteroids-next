@@ -1,14 +1,9 @@
 import { NextResponse } from 'next/server';
 
-let date = '';
+let date = new Date().toJSON().slice(0, 10);
 let asteroids: Asteroid[] = [];
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const currentDate = searchParams.get("date");
-  if (currentDate) {
-    date = currentDate;
-    asteroids = [];
-  }
+
+export async function GET() {
   const res = await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${date}&end_date=${date}&api_key=DEMO_KEY`);
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -20,4 +15,11 @@ export async function GET(request: Request) {
   date = data.links.next.split('=')[1].split('&')[0];
 
   return NextResponse.json(asteroids);
+}
+
+export async function DELETE() {
+  date = new Date().toJSON().slice(0, 10);
+  asteroids = [];
+  return NextResponse.json({ message: 'Local Data Base is clear' });
+
 }
