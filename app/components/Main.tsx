@@ -8,9 +8,11 @@ export default function Main() {
   const observerTarget = useRef(null);
 
   useEffect(() => {
-    async function getData() {
+    async function getData(move = '') {
+      console.log('down: ', move);
+
       setLoading(true);
-      const response = await fetch('/api/asteroids');
+      const response = !move ? await fetch('/api/asteroids') : await fetch(`/api/asteroids?move=${move}`);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -20,8 +22,8 @@ export default function Main() {
     }
     const observer = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting) {
-          getData();
+        if (entries[0].isIntersecting && asteroids.length > 0) {
+          getData('down');
         }
       },
       {
@@ -30,19 +32,19 @@ export default function Main() {
         rootMargin: "20px",
       }
     );
-
+    if (!asteroids.length) {
+      getData();
+    }
     if (observerTarget.current) {
       observer.observe(observerTarget.current);
     }
-
     return () => {
       if (observerTarget.current) {
-        getData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [observerTarget]);
+  }, [asteroids.length, observerTarget]);
   return (
     <div>
       <AsteroidList asteroids={asteroids} />

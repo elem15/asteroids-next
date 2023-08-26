@@ -7,8 +7,8 @@ export default async function Asteroids() {
     <div>
       <h1>Asteroids</h1>
       <Basket />
-      {/* <Main /> */}
-      <AsteroidListServer />
+      <Main />
+      {/* <AsteroidListServer /> */}
     </div>
   );
 }
