@@ -1,21 +1,12 @@
 'use client';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AsteroidList from './AsteroidList';
 
 export default function Main() {
-  const currentDate = new Date().toJSON().slice(0, 10);
   const [asteroids, setAsteroids] = useState<Asteroid[]>([]);
   const [loading, setLoading] = useState(false);
   const observerTarget = useRef(null);
-  // useEffect(() => {
-  //   async function reset() {
-  //     await fetch('/api/asteroids', {
-  //       method: 'DELETE',
-  //     });
-  //   }
-  //   reset();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+
   useEffect(() => {
     async function getData() {
       setLoading(true);
@@ -33,7 +24,11 @@ export default function Main() {
           getData();
         }
       },
-      { threshold: 1 }
+      {
+        threshold: 0,
+        root: null,
+        rootMargin: "20px",
+      }
     );
 
     if (observerTarget.current) {
