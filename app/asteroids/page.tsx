@@ -5,8 +5,6 @@ import AsteroidListServer from '../components/AsteroidListServer';
 export default async function Asteroids() {
   return (
     <div>
-      <h1>Asteroids</h1>
-      <Basket />
       <Main />
       {/* <AsteroidListServer /> */}
     </div>

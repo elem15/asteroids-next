@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import AsteroidList from './AsteroidList';
+import Basket from './Basket';
 
 export default function Main() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -44,8 +45,9 @@ export default function Main() {
         const data: { asteroidList: AsteroidOnClient[], isStart: boolean; } = await response.json();
         const { asteroidList, isStart } = data;
         setAsteroids(asteroidList);
-        console.log(isStart);
-        if (!isStart) observerUpObserve();
+        if (!isStart) {
+          observerUpObserve();
+        }
         observerDownObserve();
       } catch (error: Error | unknown) {
         let message = 'Failed to fetch data';
@@ -57,8 +59,8 @@ export default function Main() {
     }
     const options = {
       threshold: 1,
-      root: document,
-      rootMargin: "20px",
+      root: null,
+      rootMargin: "0px",
     };
     const observerDown = new IntersectionObserver(
       entries => {
@@ -71,18 +73,27 @@ export default function Main() {
       entries => {
         if (entries[0].isIntersecting && !errorMessage) {
           getData('up');
+          window.scrollTo({
+            top: 100,
+            left: 0,
+            behavior: "smooth",
+          });
         }
       }, options
     );
-    observerDownObserve();
+    async function firstLoading() {
+      observerDownObserve();
+    }
+    if (!asteroids.length) firstLoading();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [observerTargetDown]);
   return (
     <div>
       <div ref={observerTargetUp}></div>
-      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} />}
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
+      <h1>Asteroids</h1>
+      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} />}
       <div ref={observerTargetDown}></div>
     </div>
   );
