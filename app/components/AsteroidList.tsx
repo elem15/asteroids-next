@@ -1,7 +1,7 @@
 export default function AsteroidList({ asteroids }: { asteroids: Asteroid[]; }) {
   return (
     <ul>
-      {asteroids && asteroids.map((item) => <li key={item.id}>
+      {asteroids.map((item) => <li key={item.id}>
         <h3>{item.name.split('(')[1].split(')')[0]}</h3>
         <div>
           {

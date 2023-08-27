@@ -57,3 +57,7 @@ type ResponseData = {
   "element_count": number,
   "near_earth_objects": Record<string, Asteroid[]>;
 };
+
+interface ErrorMessage {
+  message: string;
+};

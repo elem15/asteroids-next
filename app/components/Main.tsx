@@ -5,24 +5,44 @@ import AsteroidList from './AsteroidList';
 export default function Main() {
   const [asteroids, setAsteroids] = useState<Asteroid[]>([]);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const observerTarget = useRef(null);
 
   useEffect(() => {
-    async function getData(move = '') {
-      console.log('down: ', move);
-
-      setLoading(true);
-      const response = !move ? await fetch('/api/asteroids') : await fetch(`/api/asteroids?move=${move}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
+    const observerUnobserve = () => {
+      if (observerTarget.current) {
+        console.log('uNobserve');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        observer.unobserve(observerTarget.current);
       }
-      const data: Asteroid[] = await response.json();
-      setAsteroids(data);
-      setLoading(false);
+    };
+    const observerObserve = () => {
+      if (observerTarget.current) {
+        console.log('observe');
+        observer.observe(observerTarget.current);
+      }
+    };
+    async function getData(move = '') {
+      observerUnobserve();
+      setLoading(true);
+      try {
+        const response = !move ? await fetch('/api/asteroids') : await fetch(`/api/asteroids?move=${move}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data: Asteroid[] = await response.json();
+        setAsteroids(data);
+        setLoading(false);
+        observerObserve();
+      } catch (error: Error | unknown) {
+        let message = 'Failed to fetch data';
+        if (error instanceof Error) message = error.message;
+        setErrorMessage(message);
+      }
     }
     const observer = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting && asteroids.length > 0) {
+        if (entries[0].isIntersecting && !errorMessage) {
           getData('down');
         }
       },
@@ -32,23 +52,18 @@ export default function Main() {
         rootMargin: "20px",
       }
     );
-    if (!asteroids.length) {
+    if (!asteroids.length && !errorMessage) {
       getData();
     }
-    if (observerTarget.current) {
-      observer.observe(observerTarget.current);
-    }
-    return () => {
-      if (observerTarget.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        observer.unobserve(observerTarget.current);
-      }
-    };
-  }, [asteroids.length, observerTarget]);
+    observerObserve();
+    // return observerUnobserve;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [observerTarget]);
   return (
     <div>
-      <AsteroidList asteroids={asteroids} />
+      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} />}
       {loading && <div>Loading...</div>}
+      {errorMessage && <div>{errorMessage}</div>}
       <div ref={observerTarget}></div>
     </div>
   );
