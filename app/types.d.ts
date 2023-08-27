@@ -48,10 +48,19 @@ type Asteroid = {
   "is_sentry_object": boolean;
 };
 
+type AsteroidOnClient = {
+  id: string;
+  name: string;
+  close_approach_date: string;
+  miss_distance_kilometers: string;
+  miss_distance_lunar: string;
+  estimated_diameter_max: number;
+};
+
 type ResponseData = {
   "links": {
     "next": string,
-    "prev": string,
+    "previous": string,
     "self": string;
   },
   "element_count": number,
