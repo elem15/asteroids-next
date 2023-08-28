@@ -4,8 +4,9 @@ type Props = {
   asteroid: AsteroidOnClient;
   loading?: boolean;
   addToCart?: (asteroid: AsteroidOnClient) => Promise<void>;
+  measure: Measure;
 };
-export default function Asteroid({ asteroid, loading, addToCart }: Props) {
+export default function Asteroid({ asteroid, loading, addToCart, measure }: Props) {
   const [clicked, setClicked] = useState(false);
   useEffect(() => {
     if (!loading) {
@@ -22,9 +23,16 @@ export default function Asteroid({ asteroid, loading, addToCart }: Props) {
         }
       </div>
       <div>{asteroid.size}</div>
-      <div>
-        {asteroid.miss_distance_kilometers} км
-      </div>
+      {measure === 'km' &&
+        <div>
+          {asteroid.miss_distance_kilometers} км
+        </div>
+      }
+      {measure === 'luna' &&
+        <div>
+          {asteroid.miss_distance_lunar} лунных орбит
+        </div>
+      }
       <div>
         {Math.floor(asteroid.estimated_diameter_max)} м
       </div>
@@ -35,7 +43,7 @@ export default function Asteroid({ asteroid, loading, addToCart }: Props) {
             В корзине
           </button>
           :
-          <button onClick={() => { addToCart(asteroid); setClicked(true); }}>
+          <button onClick={() => { addToCart(asteroid); setClicked(true); }} disabled={loading}>
             {clicked ? 'Загрузка' : 'Заказать'}
           </button>
         }

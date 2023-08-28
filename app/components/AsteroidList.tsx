@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import Asteroid from './Asteroid';
 
 type Props = {
@@ -7,9 +8,16 @@ type Props = {
 };
 
 export default function AsteroidList({ asteroids, loading, addToCart }: Props) {
+  const [measure, setMeasure] = useState<Measure>('km');
   return (
-    <ul>
-      {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} loading={loading} addToCart={addToCart} />)}
-    </ul>
+    <>
+      <div>
+        <button onClick={() => setMeasure('km')} disabled={measure === 'km'}>В километрах</button>
+        <button onClick={() => setMeasure('luna')} disabled={measure === 'luna'}>В лунных орбитах</button>
+      </div>
+      <ul>
+        {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} loading={loading} addToCart={addToCart} measure={measure} />)}
+      </ul>
+    </>
   );
 }

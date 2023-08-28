@@ -73,3 +73,5 @@ type ResponseData = {
 interface ErrorMessage {
   message: string;
 };
+
+type Measure = 'km' | 'luna';

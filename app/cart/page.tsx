@@ -24,7 +24,7 @@ export default function Cart() {
       <h1>Заказ отправлен!</h1>
       <Link href='/asteroids'>Asteroids</Link>
       <ul>
-        {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} />)}
+        {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} measure='luna' />)}
       </ul>
     </div>
   );
