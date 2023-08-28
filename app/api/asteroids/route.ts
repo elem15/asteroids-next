@@ -21,7 +21,6 @@ resetDate();
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
-  console.log(prevDate, selfDateStart, selfDateEnd, nextDate);
   let data: ResponseData;
   try {
     const res =

@@ -1,7 +1,6 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import AsteroidList from './AsteroidList';
-import Basket from './Basket';
 
 export default function Main() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -13,7 +12,6 @@ export default function Main() {
   useEffect(() => {
     const observerDownUnobserve = () => {
       if (observerTargetDown.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         observerDown.unobserve(observerTargetDown.current);
       }
     };
@@ -24,7 +22,6 @@ export default function Main() {
     };
     const observerUpUnobserve = () => {
       if (observerTargetUp.current) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         observerUp.unobserve(observerTargetUp.current);
       }
     };
@@ -34,8 +31,6 @@ export default function Main() {
       }
     };
     async function getData(move = '') {
-      observerDownUnobserve();
-      observerUpUnobserve();
       setLoading(true);
       try {
         const response = !move ? await fetch('/api/asteroids') : await fetch(`/api/asteroids?move=${move}`);
@@ -45,10 +40,12 @@ export default function Main() {
         const data: { asteroidList: AsteroidOnClient[], isStart: boolean; } = await response.json();
         const { asteroidList, isStart } = data;
         setAsteroids(asteroidList);
-        if (!isStart) {
-          observerUpObserve();
-        }
-        observerDownObserve();
+        setTimeout(() => {
+          if (!isStart) {
+            observerUpObserve();
+          }
+          observerDownObserve();
+        }, 500);
       } catch (error: Error | unknown) {
         let message = 'Failed to fetch data';
         if (error instanceof Error) message = error.message;
@@ -60,11 +57,12 @@ export default function Main() {
     const options = {
       threshold: 1,
       root: null,
-      rootMargin: "0px",
+      rootMargin: "20px",
     };
     const observerDown = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && !errorMessage) {
+          observerDownUnobserve();
           getData('down');
         }
       }, options
@@ -72,17 +70,18 @@ export default function Main() {
     const observerUp = new IntersectionObserver(
       entries => {
         if (entries[0].isIntersecting && !errorMessage) {
-          getData('up');
+          observerUpUnobserve();
           window.scrollTo({
-            top: 100,
+            top: 50,
             left: 0,
             behavior: "smooth",
           });
+          getData('up');
         }
       }, options
     );
     async function firstLoading() {
-      observerDownObserve();
+      await getData('down');
     }
     if (!asteroids.length) firstLoading();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,10 +89,11 @@ export default function Main() {
   return (
     <div>
       <div ref={observerTargetUp}></div>
-      {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
       <h1>Asteroids</h1>
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} />}
+      {loading && <div>Loading...</div>}
+      {errorMessage && <div>{errorMessage}</div>}
       <div ref={observerTargetDown}></div>
     </div>
   );
