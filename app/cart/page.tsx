@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Asteroid from '../components/Asteroid';
 
 export default function Cart() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -23,20 +24,7 @@ export default function Cart() {
       <h1>Заказ отправлен!</h1>
       <Link href='/asteroids'>Asteroids</Link>
       <ul>
-        {asteroids.map((item) => <li key={item.id}>
-          <h3>{item.name}</h3>
-          <div>
-            {
-              item.close_approach_date
-            }
-          </div>
-          <div>
-            {item.miss_distance_kilometers} км
-          </div>
-          <div>
-            {Math.floor(item.estimated_diameter_max)} м
-          </div>
-        </li>)}
+        {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} />)}
       </ul>
     </div>
   );
