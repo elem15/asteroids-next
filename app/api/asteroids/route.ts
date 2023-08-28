@@ -8,19 +8,19 @@ let selfDateEnd = '';
 let nextDate = '';
 const date = new Date();
 const currentDate = date.toJSON().slice(0, 10);
+date.setDate(date.getDate() + 1);
+const tomorrow = date.toJSON().slice(0, 10);
 function resetDate() {
   prevDate = currentDate;
   selfDateStart = currentDate;
   selfDateEnd = currentDate;
-  date.setDate(date.getDate() + 1);
-  nextDate = date.toJSON().slice(0, 10);
+  nextDate = tomorrow;
 }
 resetDate();
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
-
   let data: ResponseData;
   try {
     const res =
