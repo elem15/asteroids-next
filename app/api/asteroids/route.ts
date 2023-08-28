@@ -1,12 +1,7 @@
 import { NextResponse } from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
 
-type Db = {
-  asteroids: AsteroidOnClient[];
-};
-const db: Db = {
-  asteroids: [],
-};
+import { db } from '../db';
 
 let prevDate = '';
 let selfDateStart = '';
@@ -63,5 +58,8 @@ export async function GET(request: Request) {
 export async function DELETE() {
   resetDate();
   db.asteroids = [];
+  db.cartAsteroidIds = [];
+  db.asteroidsInCart = [];
+  db.cartAsteroidQuantity = 0;
   return NextResponse.json({ message: 'Temporally Data Base is clear' });
 }

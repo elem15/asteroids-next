@@ -8,9 +8,25 @@ export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [cartCounter, setCartCounter] = useState(0);
   const observerTargetDown = useRef(null);
   const observerTargetUp = useRef(null);
 
+  async function addToCart(asteroid: AsteroidOnClient) {
+    setLoading(true);
+    const res = await fetch('api/cart', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(asteroid),
+    });
+    if (!res.ok) {
+      throw new Error('Filed to send data');
+    }
+    await getCartQuantity();
+    setLoading(false);
+  }
   function moveScreenUp() {
     window.scrollTo({
       top: 50,
@@ -18,6 +34,17 @@ export default function Asteroids() {
       behavior: "smooth",
     });
   }
+  async function getCartQuantity() {
+    const res = await fetch('api/cart?data=counter');
+    if (!res.ok) {
+      throw new Error('Filed to send data');
+    }
+    const { counter } = await res.json();
+    setCartCounter(counter);
+  }
+  useEffect(() => {
+    getCartQuantity();
+  }, []);
   useEffect(() => {
     const observerDownUnobserve = () => {
       if (observerTargetDown.current) {
@@ -99,8 +126,12 @@ export default function Asteroids() {
       <div ref={observerTargetUp}></div>
       {errorMessage && <div>{errorMessage}</div>}
       <h1>Asteroids</h1>
-      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} />}
-      <Link className={styles.cart} href='/cart'>Cart</Link>
+      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
+      <div className={styles.cart}>
+        <h4>Корзина</h4>
+        <div>{cartCounter} астероида</div>
+        <Link href='/cart'>Отправить</Link>
+      </div>
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
       <div ref={observerTargetDown}></div>

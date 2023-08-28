@@ -1,4 +1,9 @@
-export default function AsteroidList({ asteroids }: { asteroids: AsteroidOnClient[]; }) {
+type Props = {
+  asteroids: AsteroidOnClient[];
+  loading: boolean;
+  addToCart: (asteroid: AsteroidOnClient) => Promise<void>;
+};
+export default function AsteroidList({ asteroids, loading, addToCart }: Props) {
   return (
     <ul>
       {asteroids.map((item) => <li key={item.id}>
@@ -14,6 +19,9 @@ export default function AsteroidList({ asteroids }: { asteroids: AsteroidOnClien
         <div>
           {Math.floor(item.estimated_diameter_max)} м
         </div>
+        <button onClick={() => addToCart(item)}>
+          Заказать
+        </button>
       </li>)}
     </ul>
   );
