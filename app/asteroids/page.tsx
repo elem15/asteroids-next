@@ -25,8 +25,22 @@ export default function Asteroids() {
       throw new Error('Filed to send data');
     }
     await getCartQuantity();
+    try {
+      const response = await fetch('/api/asteroids');
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data: { asteroidList: AsteroidOnClient[]; } = await response.json();
+      const { asteroidList } = data;
+      setAsteroids(asteroidList);
+    } catch (error: Error | unknown) {
+      let message = 'Failed to fetch data';
+      if (error instanceof Error) message = error.message;
+      setErrorMessage(message);
+    }
     setLoading(false);
   }
+
   function moveScreenUp() {
     window.scrollTo({
       top: 50,
@@ -34,6 +48,7 @@ export default function Asteroids() {
       behavior: "smooth",
     });
   }
+
   async function getCartQuantity() {
     const res = await fetch('api/cart?data=counter');
     if (!res.ok) {

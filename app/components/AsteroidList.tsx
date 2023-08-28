@@ -19,9 +19,15 @@ export default function AsteroidList({ asteroids, loading, addToCart }: Props) {
         <div>
           {Math.floor(item.estimated_diameter_max)} м
         </div>
-        <button onClick={() => addToCart(item)}>
-          Заказать
-        </button>
+        {item.isInCart ?
+          <button disabled>
+            В корзине
+          </button>
+          :
+          <button onClick={() => addToCart(item)}>
+            Заказать
+          </button>
+        }
       </li>)}
     </ul>
   );

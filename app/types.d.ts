@@ -55,6 +55,7 @@ type AsteroidOnClient = {
   miss_distance_kilometers: string;
   miss_distance_lunar: string;
   estimated_diameter_max: number;
+  isInCart?: boolean;
 };
 
 type ResponseData = {

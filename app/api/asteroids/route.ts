@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
 
 import { db } from '../db';
+import checkInCart from '@/app/utils/checkInCart';
 
 let prevDate = '';
 let selfDateStart = '';
@@ -23,7 +24,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
   if (!move && db.asteroids.length) {
-    return NextResponse.json({ asteroidList: db.asteroids, isStart: new Date(selfDateStart) <= new Date(currentDate) });
+    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, db.cartAsteroidIds));
+    return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   }
   try {
     const res =
@@ -52,7 +54,8 @@ export async function GET(request: Request) {
     console.error(message);
     throw new Error(message);
   }
-  return NextResponse.json({ asteroidList: db.asteroids, isStart: new Date(selfDateStart) <= new Date(currentDate) });
+  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, db.cartAsteroidIds));
+  return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
 export async function DELETE() {
