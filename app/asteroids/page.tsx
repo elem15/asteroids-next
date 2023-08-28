@@ -1,6 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import AsteroidList from '../components/AsteroidList';
+import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -9,6 +11,13 @@ export default function Asteroids() {
   const observerTargetDown = useRef(null);
   const observerTargetUp = useRef(null);
 
+  function moveScreenUp() {
+    window.scrollTo({
+      top: 50,
+      left: 0,
+      behavior: "smooth",
+    });
+  }
   useEffect(() => {
     const observerDownUnobserve = () => {
       if (observerTargetDown.current) {
@@ -41,8 +50,11 @@ export default function Asteroids() {
         const { asteroidList, isStart } = data;
         setAsteroids(asteroidList);
         setTimeout(() => {
+          if (!move && !isStart) {
+            moveScreenUp();
+          }
           if (!isStart) {
-            observerUpObserve();
+            setTimeout(() => { observerUpObserve(); }, 500);
           }
           observerDownObserve();
         }, 900);
@@ -71,17 +83,13 @@ export default function Asteroids() {
       entries => {
         if (entries[0].isIntersecting && !errorMessage) {
           observerUpUnobserve();
-          window.scrollTo({
-            top: 50,
-            left: 0,
-            behavior: "smooth",
-          });
+          moveScreenUp();
           getData('up');
         }
       }, options
     );
     async function firstLoading() {
-      await getData('down');
+      await getData();
     }
     if (!asteroids.length) firstLoading();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,6 +100,7 @@ export default function Asteroids() {
       {errorMessage && <div>{errorMessage}</div>}
       <h1>Asteroids</h1>
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} />}
+      <Link className={styles.cart} href='/cart'>Cart</Link>
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
       <div ref={observerTargetDown}></div>

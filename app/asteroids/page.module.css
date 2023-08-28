@@ -1,0 +1,7 @@
+.cart {
+  position: fixed;
+  right: 100px;
+  top: 100px;
+  border: 1px solid wheat;
+  padding: 1rem;
+}

@@ -1,5 +1,5 @@
 type Db = {
-  asteroids: Asteroid[];
+  asteroids: AsteroidOnClient[];
 };
 export const db: Db = {
   asteroids: [],
