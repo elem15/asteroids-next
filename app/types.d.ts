@@ -55,6 +55,9 @@ type AsteroidOnClient = {
   miss_distance_kilometers: string;
   miss_distance_lunar: string;
   estimated_diameter_max: number;
+  isDanger: Boolean;
+  size: 'large' | 'small';
+  isInCart?: boolean;
 };
 
 type ResponseData = {
@@ -70,3 +73,5 @@ type ResponseData = {
 interface ErrorMessage {
   message: string;
 };
+
+type Measure = 'km' | 'luna';
