@@ -19,7 +19,7 @@ export async function GET(request: Request) {
   const dataType = searchParams.get("data");
   const data = await readJsonDB('cart-counter') || { counter: 0 };
   if (dataType === 'counter') {
-    return NextResponse.json({ counter: data.counter });
+    return NextResponse.json(data);
   } else {
     const cart: { ids: string[], asteroids: AsteroidOnClient[]; } = await readJsonDB('cart-DB') || { ids: [], asteroids: [] };
     return NextResponse.json({ counter: data.counter, asteroids: cart.asteroids });

@@ -1,13 +1,10 @@
 import fs from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import { join } from 'path';
 const fsPromises = fs.promises;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export async function writeJsonDB(filename: string, record: Record<any, any>) {
   try {
-    await fsPromises.writeFile(join(__dirname, '..', filename + '.json'), JSON.stringify(record));
+    await fsPromises.writeFile(join(process.cwd(), 'json', filename + '.json'), JSON.stringify(record));
   } catch (err) {
     console.error(err);
   }
@@ -15,7 +12,7 @@ export async function writeJsonDB(filename: string, record: Record<any, any>) {
 
 export async function readJsonDB(filename: string) {
   try {
-    const data = await fsPromises.readFile(join(__dirname, '..', filename + '.json'), 'utf-8');
+    const data = await fsPromises.readFile(join(process.cwd(), 'json', filename + '.json'), 'utf-8');
     return JSON.parse(data);
   } catch (err) {
     console.error(err);

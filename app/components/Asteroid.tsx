@@ -8,11 +8,6 @@ type Props = {
 };
 export default function Asteroid({ asteroid, loading, addToCart, measure }: Props) {
   const [clicked, setClicked] = useState(false);
-  // useEffect(() => {
-  //   if (!loading) {
-  //     setClicked(false);
-  //   }
-  // }, [loading]);
 
   return (
     <li key={asteroid.id}>
