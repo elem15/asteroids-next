@@ -4,7 +4,8 @@ const fsPromises = fs.promises;
 
 export async function writeJsonDB(filename: string, record: Record<any, any>) {
   try {
-    await fsPromises.writeFile(join(process.cwd(), 'app', 'api', 'json', filename + '.json'), JSON.stringify(record));
+    console.log(join('tmp', filename + '.json'));
+    await fsPromises.writeFile(join('tmp', filename + '.json'), JSON.stringify(record));
   } catch (err) {
     console.error(err);
   }
@@ -12,7 +13,7 @@ export async function writeJsonDB(filename: string, record: Record<any, any>) {
 
 export async function readJsonDB(filename: string) {
   try {
-    const data = await fsPromises.readFile(join(process.cwd(), 'app', 'api', 'json', filename + '.json'), 'utf-8');
+    const data = await fsPromises.readFile(join('tmp', filename + '.json'), 'utf-8');
     return JSON.parse(data);
   } catch (err) {
     console.error(err);
