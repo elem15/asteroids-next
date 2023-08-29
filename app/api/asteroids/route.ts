@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
 import { db } from '../db';
 import checkInCart from '@/app/utils/checkInCart';
-import { COMMON_ERROR, DB_CLEAR, NASA_ERROR } from '@/assets/constants/messages';
-import { NASA_BASE_URL } from '@/assets/constants/urls';
+import { COMMON_ERROR, DB_CLEAR, NASA_ERROR } from '@/app/assets/constants/messages';
+import { NASA_BASE_URL } from '@/app/assets/constants/urls';
+import { readJsonDB, writeJsonDB } from '@/app/utils/jsonORM';
 
 let prevDate = '';
 let selfDateStart = '';
@@ -24,8 +25,11 @@ resetDate();
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
+
+  const cart: { ids: string[], asteroids: AsteroidOnClient[]; } = await readJsonDB('cart-DB') || { ids: [], asteroids: [] };
+
   if (!move && db.asteroids.length) {
-    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, db.cartAsteroidIds));
+    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
     return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   }
   try {
@@ -55,15 +59,17 @@ export async function GET(request: Request) {
     console.error(message);
     throw new Error(message);
   }
-  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, db.cartAsteroidIds));
+  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
   return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
 export async function DELETE() {
   resetDate();
   db.asteroids = [];
-  db.cartAsteroidIds = [];
-  db.asteroidsInCart = [];
-  db.cartAsteroidQuantity = 0;
+
+  await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
+
+  await writeJsonDB('cart-counter', { counter: 0 });
+
   return NextResponse.json({ message: DB_CLEAR });
 }

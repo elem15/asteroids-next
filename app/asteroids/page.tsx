@@ -3,8 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import AsteroidList from '../components/AsteroidList';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { CART_ERROR, COMMON_ERROR, NASA_ERROR } from '@/assets/constants/messages';
-import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/assets/constants/urls';
+import { CART_ERROR, COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
+import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -160,13 +160,15 @@ export default function Asteroids() {
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
       <div className={styles.cart}>
         <h4>Корзина</h4>
-        {cartCounter > 0 ?
-          <>
-            <div>{cartCounter} астероида</div>
-            <Link href={CART_PAGE_URL}>Отправить</Link>
-          </>
-          : <div>Миссии не заказаны</div>
-        }
+        {!loading && <>
+          {cartCounter > 0 ?
+            <>
+              <div>{cartCounter} астероида</div>
+              <Link href={CART_PAGE_URL}>Отправить</Link>
+            </>
+            : <div>Миссии не заказаны</div>
+          }
+        </>}
       </div>
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}

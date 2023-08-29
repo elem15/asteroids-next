@@ -1,5 +1,5 @@
 'use client';
-import { ASTEROIDS_API_URL, ASTEROIDS_PAGE_URL } from '@/assets/constants/urls';
+import { ASTEROIDS_API_URL, ASTEROIDS_PAGE_URL } from '@/app/assets/constants/urls';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 
