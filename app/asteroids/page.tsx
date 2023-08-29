@@ -160,8 +160,13 @@ export default function Asteroids() {
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
       <div className={styles.cart}>
         <h4>Корзина</h4>
-        <div>{cartCounter} астероида</div>
-        <Link href={CART_PAGE_URL}>Отправить</Link>
+        {cartCounter > 0 ?
+          <>
+            <div>{cartCounter} астероида</div>
+            <Link href={CART_PAGE_URL}>Отправить</Link>
+          </>
+          : <div>Миссии не заказаны</div>
+        }
       </div>
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
