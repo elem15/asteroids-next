@@ -1,4 +1,5 @@
 'use client';
+import { ASTEROIDS_API_URL, ASTEROIDS_PAGE_URL } from '@/assets/constants/urls';
 import { redirect } from 'next/navigation';
 import { useEffect } from 'react';
 
@@ -6,12 +7,12 @@ import { useEffect } from 'react';
 export default function Home() {
   useEffect(() => {
     async function reset() {
-      const response = await fetch('/api/asteroids', {
+      const response = await fetch(ASTEROIDS_API_URL, {
         method: 'DELETE',
       });
       return response.json();
     }
     reset();
-    redirect('/asteroids');
+    redirect(ASTEROIDS_PAGE_URL);
   }, []);
 }

@@ -2,7 +2,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const server = dev ? 'http://localhost:3000' : 'https://your_deployment.server.com';
 
 async function getData() {
-  const res = await fetch(server + '/api/asteroids');
+  const res = await fetch(server + ASTEROIDS_API_URL);
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');

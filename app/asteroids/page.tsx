@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import AsteroidList from '../components/AsteroidList';
 import Link from 'next/link';
 import styles from './page.module.css';
+import { CART_ERROR, COMMON_ERROR, NASA_ERROR } from '@/assets/constants/messages';
+import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/assets/constants/urls';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -14,27 +16,33 @@ export default function Asteroids() {
 
   async function addToCart(asteroid: AsteroidOnClient) {
     setLoading(true);
-    const res = await fetch('api/cart', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(asteroid),
-    });
-    if (!res.ok) {
-      throw new Error('Filed to send data');
+    try {
+      const res = await fetch('api/cart', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(asteroid),
+      });
+      if (!res.ok) {
+        throw new Error(CART_ERROR);
+      }
+    } catch (error: Error | unknown) {
+      let message = COMMON_ERROR;
+      if (error instanceof Error) message = error.message;
+      setErrorMessage(message);
     }
     await getCartQuantity();
     try {
-      const response = await fetch('/api/asteroids');
+      const response = await fetch(ASTEROIDS_API_URL);
       if (!response.ok) {
-        throw new Error('Failed to fetch data');
+        throw new Error(NASA_ERROR);
       }
       const data: { asteroidList: AsteroidOnClient[]; } = await response.json();
       const { asteroidList } = data;
       setAsteroids(asteroidList);
     } catch (error: Error | unknown) {
-      let message = 'Failed to fetch data';
+      let message = COMMON_ERROR;
       if (error instanceof Error) message = error.message;
       setErrorMessage(message);
     }
@@ -50,16 +58,24 @@ export default function Asteroids() {
   }
 
   async function getCartQuantity() {
-    const res = await fetch('api/cart?data=counter');
-    if (!res.ok) {
-      throw new Error('Filed to send data');
+    try {
+      const res = await fetch('api/cart?data=counter');
+      if (!res.ok) {
+        throw new Error('Не удалось вычислить все сближения!');
+      }
+      const { counter } = await res.json();
+      setCartCounter(counter);
+    } catch (error: Error | unknown) {
+      let message = 'Filed to fetch data';
+      if (error instanceof Error) message = error.message;
+      setErrorMessage(message);
     }
-    const { counter } = await res.json();
-    setCartCounter(counter);
   }
+
   useEffect(() => {
     getCartQuantity();
   }, []);
+
   useEffect(() => {
     const observerDownUnobserve = () => {
       if (observerTargetDown.current) {
@@ -84,9 +100,9 @@ export default function Asteroids() {
     async function getData(move = '') {
       setLoading(true);
       try {
-        const response = !move ? await fetch('/api/asteroids') : await fetch(`/api/asteroids?move=${move}`);
+        const response = !move ? await fetch(ASTEROIDS_API_URL) : await fetch(`/api/asteroids?move=${move}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          throw new Error(NASA_ERROR);
         }
         const data: { asteroidList: AsteroidOnClient[], isStart: boolean; } = await response.json();
         const { asteroidList, isStart } = data;
@@ -101,7 +117,7 @@ export default function Asteroids() {
           observerDownObserve();
         }, 900);
       } catch (error: Error | unknown) {
-        let message = 'Failed to fetch data';
+        let message = COMMON_ERROR;
         if (error instanceof Error) message = error.message;
         setErrorMessage(message);
       } finally {
@@ -145,7 +161,7 @@ export default function Asteroids() {
       <div className={styles.cart}>
         <h4>Корзина</h4>
         <div>{cartCounter} астероида</div>
-        <Link href='/cart'>Отправить</Link>
+        <Link href={CART_PAGE_URL}>Отправить</Link>
       </div>
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}

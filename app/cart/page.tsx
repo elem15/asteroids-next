@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Asteroid from '../components/Asteroid';
+import { CART_COUNT_ERROR, COMMON_ERROR } from '@/assets/constants/messages';
+import { ASTEROIDS_PAGE_URL } from '@/assets/constants/urls';
 
 export default function Cart() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -10,22 +12,31 @@ export default function Cart() {
   useEffect(() => {
     async function getAsteroidsFromCart() {
       setLoading(true);
-      const res = await fetch('api/cart?data=asteroids');
-      if (!res.ok) {
-        throw new Error('Failed to fetch data');
+      try {
+        const res = await fetch('api/cart?data=asteroids');
+        if (!res.ok) {
+          throw new Error(CART_COUNT_ERROR);
+        }
+        const { asteroids } = await res.json();
+        setAsteroids(asteroids);
+      } catch (error: Error | unknown) {
+        let message = COMMON_ERROR;
+        if (error instanceof Error) message = error.message;
+        setErrorMessage(message);
       }
-      const { asteroids } = await res.json();
-      setAsteroids(asteroids);
-      setLoading(true);
+      setLoading(false);
     }
     getAsteroidsFromCart();
-  }, []); return (
+  }, []);
+  return (
     <div>
       <h1>Заказ отправлен!</h1>
-      <Link href='/asteroids'>Asteroids</Link>
+      <Link href={ASTEROIDS_PAGE_URL}>Asteroids</Link>
       <ul>
         {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} measure='luna' />)}
       </ul>
+      {loading && <div>Loading...</div>}
+      {errorMessage && <div>{errorMessage}</div>}
     </div>
   );
 }

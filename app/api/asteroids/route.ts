@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
-
 import { db } from '../db';
 import checkInCart from '@/app/utils/checkInCart';
+import { COMMON_ERROR, DB_CLEAR, NASA_ERROR } from '@/assets/constants/messages';
+import { NASA_BASE_URL } from '@/assets/constants/urls';
 
 let prevDate = '';
 let selfDateStart = '';
@@ -30,11 +31,11 @@ export async function GET(request: Request) {
   try {
     const res =
       move === 'up' ?
-        await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${prevDate}&end_date=${selfDateStart}&api_key=DEMO_KEY`)
-        : await fetch(`https://api.nasa.gov/neo/rest/v1/feed?start_date=${selfDateEnd}&end_date=${nextDate}&api_key=DEMO_KEY`);
+        await fetch(`${NASA_BASE_URL}/feed?start_date=${prevDate}&end_date=${selfDateStart}&api_key=DEMO_KEY`)
+        : await fetch(`${NASA_BASE_URL}/feed?start_date=${selfDateEnd}&end_date=${nextDate}&api_key=DEMO_KEY`);
     const data: ResponseData = await res.json();
     if (!res.ok) {
-      throw new Error('Failed to fetch data');
+      throw new Error(NASA_ERROR);
     }
 
     const asteroids =
@@ -49,7 +50,7 @@ export async function GET(request: Request) {
     selfDateEnd = data.links.next.split('=')[1].split('&')[0];
     nextDate = data.links.next.split('=')[2].split('&')[0];
   } catch (error: Error | unknown) {
-    let message = 'Failed to fetch data';
+    let message = COMMON_ERROR;
     if (error instanceof Error) message = error.message;
     console.error(message);
     throw new Error(message);
@@ -64,5 +65,5 @@ export async function DELETE() {
   db.cartAsteroidIds = [];
   db.asteroidsInCart = [];
   db.cartAsteroidQuantity = 0;
-  return NextResponse.json({ message: 'Temporally Data Base is clear' });
+  return NextResponse.json({ message: DB_CLEAR });
 }

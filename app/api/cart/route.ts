@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
 import { db } from '../db';
+import { SUCCESS_ADDED } from '@/assets/constants/messages';
 
 export async function POST(request: Request) {
   const asteroid: AsteroidOnClient = await request.json();
   db.asteroidsInCart.push(asteroid);
   db.cartAsteroidIds.push(asteroid.id);
   db.cartAsteroidQuantity = db.asteroidsInCart.length;
-  return NextResponse.json({ message: 'Asteroid added to cart' });
+  return NextResponse.json({ message: SUCCESS_ADDED });
 }
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -16,9 +17,4 @@ export async function GET(request: Request) {
   } else {
     return NextResponse.json({ counter: db.cartAsteroidQuantity, asteroids: db.asteroidsInCart });
   }
-}
-export async function DELETE() {
-  db.asteroidsInCart = [];
-  db.cartAsteroidQuantity = 0;
-  return NextResponse.json({ message: 'Temporally Cart is clear' });
 }
