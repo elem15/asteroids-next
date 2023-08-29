@@ -5,6 +5,9 @@ import checkInCart from '@/app/utils/checkInCart';
 import { COMMON_ERROR, DB_CLEAR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { NASA_BASE_URL } from '@/app/assets/constants/urls';
 import { readJsonDB, writeJsonDB } from '@/app/utils/jsonORM';
+import fs from 'fs';
+
+const fsPromises = fs.promises;
 
 let prevDate = '';
 let selfDateStart = '';
@@ -66,6 +69,12 @@ export async function GET(request: Request) {
 export async function DELETE() {
   resetDate();
   db.asteroids = [];
+
+  try {
+    await fsPromises.stat('/tmp');
+  } catch (error) {
+    return NextResponse.json({ message: DB_CLEAR });
+  }
 
   await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
 
