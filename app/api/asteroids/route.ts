@@ -51,7 +51,6 @@ export async function GET(request: Request) {
         : [...data['near_earth_objects'][selfDateEnd], ...data['near_earth_objects'][nextDate]];
 
     db.asteroids = asteroids.map(convertAsteroids);
-
     prevDate = data.links.previous.split('=')[1].split('&')[0];
     selfDateStart = data.links.previous.split('=')[2].split('&')[0];
     selfDateEnd = data.links.next.split('=')[1].split('&')[0];
@@ -62,12 +61,14 @@ export async function GET(request: Request) {
     throw new Error(message);
   }
   const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
+
   return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
 export async function DELETE() {
   resetDate();
   db.asteroids = [];
+  db.asteroidsInCart = [];
   db.counter = 0;
   db.ids = [];
   try {
