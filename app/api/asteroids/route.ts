@@ -29,10 +29,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
 
-  const { ids }: { ids: string[]; } = await readJsonDB('cart-counter') || { ids: [] };
+  const cart = await readJsonDB('cart-counter') || { ids: db.ids };
 
   if (!move && db.asteroids.length) {
-    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
+    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
     return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   }
   try {
@@ -61,14 +61,15 @@ export async function GET(request: Request) {
     console.error(message);
     throw new Error(message);
   }
-  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
+  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
   return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
 export async function DELETE() {
   resetDate();
   db.asteroids = [];
-
+  db.counter = 0;
+  db.ids = [];
   try {
     await fsPromises.stat('/tmp');
   } catch (error) {
