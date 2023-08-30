@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
-import { db } from '../db';
+import { db } from '../cart/route';
 import checkInCart from '@/app/utils/checkInCart';
 import { COMMON_ERROR, DB_CLEAR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { NASA_BASE_URL } from '@/app/assets/constants/urls';
-import { readJsonDB, writeJsonDB } from '@/app/utils/jsonORM';
-import fs from 'fs';
+// import { readJsonDB, writeJsonDB } from '@/app/utils/jsonORM';
+// import fs from 'fs';
 
-const fsPromises = fs.promises;
+// const fsPromises = fs.promises;
 
 let prevDate = '';
 let selfDateStart = '';
@@ -29,7 +29,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
 
-  const cart = await readJsonDB('cart-counter') || { ids: db.ids };
+  const cart =
+    // await readJsonDB('cart-counter') ||
+    { ids: db.ids };
 
   if (!move && db.asteroids.length) {
     const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
@@ -71,15 +73,15 @@ export async function DELETE() {
   db.asteroidsInCart = [];
   db.counter = 0;
   db.ids = [];
-  try {
-    await fsPromises.stat('/tmp');
-  } catch (error) {
-    return NextResponse.json({ message: DB_CLEAR });
-  }
+  // try {
+  //   await fsPromises.stat('/tmp');
+  // } catch (error) {
+  //   return NextResponse.json({ message: DB_CLEAR });
+  // }
 
-  await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
+  // await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
 
-  await writeJsonDB('cart-counter', { counter: 0, ids: [] });
+  // await writeJsonDB('cart-counter', { counter: 0, ids: [] });
 
   return NextResponse.json({ message: DB_CLEAR });
 }
