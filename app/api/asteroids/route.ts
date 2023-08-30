@@ -56,9 +56,8 @@ export async function GET(request: Request) {
     selfDateStart = data.links.previous.split('=')[2].split('&')[0];
     selfDateEnd = data.links.next.split('=')[1].split('&')[0];
     nextDate = data.links.next.split('=')[2].split('&')[0];
-  } catch (error: Error | unknown) {
-    let message = COMMON_ERROR;
-    if (error instanceof Error) message = error.message;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : COMMON_ERROR;
     console.error(message);
     throw new Error(message);
   }

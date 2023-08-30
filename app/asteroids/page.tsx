@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import AsteroidList from '../components/AsteroidList';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { CART_ERROR, COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
+import { CART_ERROR, CLOSE_FILED, COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
 
 export default function Asteroids() {
@@ -27,9 +27,8 @@ export default function Asteroids() {
       if (!res.ok) {
         throw new Error(CART_ERROR);
       }
-    } catch (error: Error | unknown) {
-      let message = COMMON_ERROR;
-      if (error instanceof Error) message = error.message;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
     }
     await getCartQuantity();
@@ -41,9 +40,8 @@ export default function Asteroids() {
       const data: { asteroidList: AsteroidOnClient[]; } = await response.json();
       const { asteroidList } = data;
       setAsteroids(asteroidList);
-    } catch (error: Error | unknown) {
-      let message = COMMON_ERROR;
-      if (error instanceof Error) message = error.message;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
     }
     setLoading(false);
@@ -61,13 +59,12 @@ export default function Asteroids() {
     try {
       const res = await fetch('api/cart?data=counter');
       if (!res.ok) {
-        throw new Error('Не удалось вычислить все сближения!');
+        throw new Error(CLOSE_FILED);
       }
       const { counter } = await res.json();
       setCartCounter(counter);
-    } catch (error: Error | unknown) {
-      let message = 'Filed to fetch data';
-      if (error instanceof Error) message = error.message;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
     }
   }
@@ -116,9 +113,8 @@ export default function Asteroids() {
           }
           observerDownObserve();
         }, 900);
-      } catch (error: Error | unknown) {
-        let message = COMMON_ERROR;
-        if (error instanceof Error) message = error.message;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : COMMON_ERROR;
         setErrorMessage(message);
       } finally {
         setLoading(false);
