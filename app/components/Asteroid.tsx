@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 type Props = {
@@ -11,7 +12,7 @@ export default function Asteroid({ asteroid, loading, addToCart, measure }: Prop
 
   return (
     <li key={asteroid.id}>
-      <h3>{asteroid.name}</h3>
+      <h3><Link href={`/asteroid/${asteroid.id}`}>{asteroid.name}</Link></h3>
       <div>
         {
           asteroid.close_approach_date
@@ -25,7 +26,7 @@ export default function Asteroid({ asteroid, loading, addToCart, measure }: Prop
       }
       {measure === 'luna' &&
         <div>
-          {asteroid.miss_distance_lunar} лунных орбит
+          {asteroid.miss_distance_lunar}
         </div>
       }
       <div>

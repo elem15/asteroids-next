@@ -29,10 +29,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
 
-  const cart: { ids: string[], asteroids: AsteroidOnClient[]; } = await readJsonDB('cart-DB') || { ids: [], asteroids: [] };
+  const { ids }: { ids: string[]; } = await readJsonDB('cart-counter') || { ids: [] };
 
   if (!move && db.asteroids.length) {
-    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
+    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
     return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   }
   try {
@@ -56,13 +56,12 @@ export async function GET(request: Request) {
     selfDateStart = data.links.previous.split('=')[2].split('&')[0];
     selfDateEnd = data.links.next.split('=')[1].split('&')[0];
     nextDate = data.links.next.split('=')[2].split('&')[0];
-  } catch (error: Error | unknown) {
-    let message = COMMON_ERROR;
-    if (error instanceof Error) message = error.message;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : COMMON_ERROR;
     console.error(message);
     throw new Error(message);
   }
-  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
+  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
   return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
@@ -78,7 +77,7 @@ export async function DELETE() {
 
   await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
 
-  await writeJsonDB('cart-counter', { counter: 0 });
+  await writeJsonDB('cart-counter', { counter: 0, ids: [] });
 
   return NextResponse.json({ message: DB_CLEAR });
 }

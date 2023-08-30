@@ -19,9 +19,8 @@ export default function Cart() {
         }
         const { asteroids } = await res.json();
         setAsteroids(asteroids);
-      } catch (error: Error | unknown) {
-        let message = COMMON_ERROR;
-        if (error instanceof Error) message = error.message;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : COMMON_ERROR;
         setErrorMessage(message);
       }
       setLoading(false);
