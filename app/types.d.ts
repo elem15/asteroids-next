@@ -53,7 +53,7 @@ interface AsteroidOnClient {
   name: string;
   close_approach_date?: string;
   miss_distance_kilometers: string;
-  miss_distance_lunar: string;
+  miss_distance_lunar?: string;
   estimated_diameter_max: number;
   size: 'large' | 'small';
   close_approach_data?: ApproachOnClient[];

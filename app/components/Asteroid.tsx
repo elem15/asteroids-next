@@ -26,7 +26,7 @@ export default function Asteroid({ asteroid, loading, addToCart, measure }: Prop
       }
       {measure === 'luna' &&
         <div>
-          {asteroid.miss_distance_lunar} лунных орбит
+          {asteroid.miss_distance_lunar}
         </div>
       }
       <div>

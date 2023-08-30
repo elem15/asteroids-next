@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 import { CART_ERROR, CLOSE_FILED, COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
+import { declOfNum } from '../utils/deklOfNum';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -159,7 +160,7 @@ export default function Asteroids() {
         {!loading && <>
           {cartCounter > 0 ?
             <>
-              <div>{cartCounter} астероида</div>
+              <div>{cartCounter} {declOfNum(cartCounter, ['астероид', 'астероида', 'астероидов'])}</div>
               <Link href={CART_PAGE_URL}>Отправить</Link>
             </>
             : <div>Миссии не заказаны</div>
