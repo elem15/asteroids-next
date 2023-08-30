@@ -31,7 +31,9 @@ export default async function Asteroid({ params }: { params: { id: string; }; })
       <ul>
         {asteroid.close_approach_data?.map((a) => <li key={a.miss_distance_kilometers}>
           <div>Скорость относительно Земли {a.kilometers_per_hour} км.</div>
-          <div>Момент максимального сближения {a.close_approach_date} на расстояние {a.miss_distance_kilometers} км при вращении по орбите планеты {planets[a.orbiting_body]}.</div>
+          <div>Момент максимального сближения: {a.close_approach_date}</div>
+          <div>Минимальная дистанция {a.miss_distance_kilometers} км.</div>
+          <div>Вращается по орбите планеты {planets[a.orbiting_body]}.</div>
         </li>)}
       </ul>
     </div>

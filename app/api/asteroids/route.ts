@@ -29,10 +29,10 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
 
-  const cart: { ids: string[], asteroids: AsteroidOnClient[]; } = await readJsonDB('cart-DB') || { ids: [], asteroids: [] };
+  const { ids }: { ids: string[]; } = await readJsonDB('cart-counter') || { ids: [] };
 
   if (!move && db.asteroids.length) {
-    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
+    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
     return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   }
   try {
@@ -61,7 +61,7 @@ export async function GET(request: Request) {
     console.error(message);
     throw new Error(message);
   }
-  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, cart.ids));
+  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
   return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
@@ -77,7 +77,7 @@ export async function DELETE() {
 
   await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
 
-  await writeJsonDB('cart-counter', { counter: 0 });
+  await writeJsonDB('cart-counter', { counter: 0, ids: [] });
 
   return NextResponse.json({ message: DB_CLEAR });
 }
