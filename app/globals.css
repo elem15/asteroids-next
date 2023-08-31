@@ -1,17 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Passion+One&display=swap');
 
-@font-face {
-  font-family: "HelveticaNeueLTProLt";
-  src:
-    url("../app/assets/fonts/HelveticaNeueLTProLt.otf") format("otf"),
-}
-
 :root {
   --Orange-Base: #F86600;
   --White-Base: #FFF;
-
   --max-width: 1600px;
   --border-radius: 12px;
+  --font-helvetica: url("assets/fonts/HelveticaNeueLTProLt.otf") format("otf");
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
     'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;

@@ -7,9 +7,9 @@
   gap: 8px;
 }
 
-.header__head {
+.header__title {
   color: var(--Orange-Base);
-  font-family: 'Passion One', var(--font-mono);
+  font-family: 'Passion One', 'Courier New';
   font-size: 32px;
   font-style: normal;
   font-weight: 400;
@@ -18,7 +18,7 @@
 
 .header__content {
   color: var(--White-Base);
-  font-family: url("../../assets/fonts/HelveticaNeueLTProLt.otf") format("otf"), var(--font-mono);
+  font-family: var(--font-helvetica), 'Courier New';
   font-size: 16px;
   font-style: normal;
   font-weight: 300;

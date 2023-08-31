@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import AsteroidList from '../components/AsteroidList';
+import AsteroidList from '../components/asteroid-list/AsteroidList';
 import Link from 'next/link';
 import styles from './page.module.css';
 import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
