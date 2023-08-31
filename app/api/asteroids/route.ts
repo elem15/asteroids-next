@@ -1,13 +1,9 @@
 import { NextResponse } from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
-import { db } from '../db';
-import checkInCart from '@/app/utils/checkInCart';
 import { COMMON_ERROR, DB_CLEAR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { NASA_BASE_URL } from '@/app/assets/constants/urls';
-import { readJsonDB, writeJsonDB } from '@/app/utils/jsonORM';
-import fs from 'fs';
 
-const fsPromises = fs.promises;
+let asteroidList: AsteroidOnClient[] = [];
 
 let prevDate = '';
 let selfDateStart = '';
@@ -22,6 +18,7 @@ function resetDate() {
   selfDateStart = currentDate;
   selfDateEnd = currentDate;
   nextDate = tomorrow;
+  asteroidList = [];
 }
 resetDate();
 
@@ -29,10 +26,7 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const move = searchParams.get("move");
 
-  const { ids }: { ids: string[]; } = await readJsonDB('cart-counter') || { ids: [] };
-
-  if (!move && db.asteroids.length) {
-    const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
+  if (!move && asteroidList.length) {
     return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   }
   try {
@@ -50,34 +44,20 @@ export async function GET(request: Request) {
         [...data['near_earth_objects'][prevDate], ...data['near_earth_objects'][selfDateStart]]
         : [...data['near_earth_objects'][selfDateEnd], ...data['near_earth_objects'][nextDate]];
 
-    db.asteroids = asteroids.map(convertAsteroids);
-
+    asteroidList = asteroids.map(convertAsteroids);
     prevDate = data.links.previous.split('=')[1].split('&')[0];
     selfDateStart = data.links.previous.split('=')[2].split('&')[0];
     selfDateEnd = data.links.next.split('=')[1].split('&')[0];
     nextDate = data.links.next.split('=')[2].split('&')[0];
+    return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
   } catch (error) {
     const message = error instanceof Error ? error.message : COMMON_ERROR;
     console.error(message);
     throw new Error(message);
   }
-  const asteroidList = db.asteroids.map((asteroid) => checkInCart(asteroid, ids));
-  return NextResponse.json({ asteroidList, isStart: new Date(selfDateStart) <= new Date(currentDate) });
 }
 
 export async function DELETE() {
   resetDate();
-  db.asteroids = [];
-
-  try {
-    await fsPromises.stat('/tmp');
-  } catch (error) {
-    return NextResponse.json({ message: DB_CLEAR });
-  }
-
-  await writeJsonDB('cart-DB', { ids: [], asteroids: [] });
-
-  await writeJsonDB('cart-counter', { counter: 0, ids: [] });
-
   return NextResponse.json({ message: DB_CLEAR });
 }
