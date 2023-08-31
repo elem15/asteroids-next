@@ -2,10 +2,11 @@
 
 :root {
   --Orange-Base: #F86600;
+  --Orange-Smooth: rgba(248, 102, 0, 0.15);
   --White-Base: #FFF;
   --max-width: 1600px;
   --border-radius: 12px;
-  --font-helvetica: url("assets/fonts/HelveticaNeueLTProLt.otf") format("otf");
+  --font-helvetica: url("assets/fonts/HelveticaNeueLTProLt.otf") format("otf"), 'Courier New';
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
     'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;

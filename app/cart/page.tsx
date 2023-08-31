@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Asteroid from '../components/Asteroid';
+import Asteroid from '../components/asteroid-card/AsteroidCard';
 import { COMMON_ERROR } from '@/app/assets/constants/messages';
 import { ASTEROIDS_PAGE_URL } from '@/app/assets/constants/urls';
 

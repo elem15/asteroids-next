@@ -1,5 +1,14 @@
+.list {
+  display: flex;
+  width: 402px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
 .list__head {
-  max-width: 400px;
+  width: 402px;
+  margin-bottom: 24px;
 }
 
 .list__title {
@@ -9,11 +18,11 @@
   font-style: normal;
   font-weight: 600;
   line-height: 36px;
-  /* 128.571% */
+  margin-bottom: 8px;
 }
 
 .list__toggler {
-  font-family: var(--font-helvetica), 'Courier New';
+  font-family: var(--font-helvetica);
   font-size: 14px;
   font-style: normal;
   line-height: 24px;

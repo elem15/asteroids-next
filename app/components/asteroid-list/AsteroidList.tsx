@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Asteroid from '../Asteroid';
+import Asteroid from '../asteroid-card/AsteroidCard';
 import styles from './AsteroidList.module.css';
 type Props = {
   asteroids: AsteroidOnClient[];
@@ -20,7 +20,8 @@ export default function AsteroidList({ asteroids, loading, addToCart }: Props) {
             disabled={measure === 'luna'}>В лунных орбитах</button>
         </div>
       </div>
-      <ul>
+
+      <ul className={styles.list}>
         {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} loading={loading} addToCart={addToCart} measure={measure} />)}
       </ul>
     </>

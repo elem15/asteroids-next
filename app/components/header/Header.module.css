@@ -18,7 +18,7 @@
 
 .header__content {
   color: var(--White-Base);
-  font-family: var(--font-helvetica), 'Courier New';
+  font-family: var(--font-helvetica);
   font-size: 16px;
   font-style: normal;
   font-weight: 300;
