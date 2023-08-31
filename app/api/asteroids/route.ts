@@ -59,5 +59,6 @@ export async function GET(request: Request) {
 
 export async function DELETE() {
   resetDate();
+
   return NextResponse.json({ message: DB_CLEAR });
 }

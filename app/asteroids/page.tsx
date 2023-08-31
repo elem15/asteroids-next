@@ -7,6 +7,8 @@ import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
 import { declOfNum } from '../utils/deklOfNum';
 import checkInCart from '../utils/checkInCart';
+import Header from '../components/header/Header';
+import CartWidget from '../components/cart-widget/CartWidget';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -162,20 +164,9 @@ export default function Asteroids() {
     <div>
       <div ref={observerTargetUp}></div>
       {errorMessage && <div>{errorMessage}</div>}
-      <h1>Asteroids</h1>
+      <Header />
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
-      <div className={styles.cart}>
-        <h4>Корзина</h4>
-        {!loading && <>
-          {cartCounter > 0 ?
-            <>
-              <div>{cartCounter} {declOfNum(cartCounter, ['астероид', 'астероида', 'астероидов'])}</div>
-              <Link href={CART_PAGE_URL}>Отправить</Link>
-            </>
-            : <div>Миссии не заказаны</div>
-          }
-        </>}
-      </div>
+      {/* <CartWidget loading={loading} cartCounter={cartCounter} /> */}
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
       <div ref={observerTargetDown}></div>
