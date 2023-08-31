@@ -13,12 +13,9 @@ export default function Cart() {
     async function getAsteroidsFromCart() {
       setLoading(true);
       try {
-        const res = await fetch('api/cart?data=asteroids');
-        if (!res.ok) {
-          throw new Error(CART_COUNT_ERROR);
-        }
-        const { asteroids } = await res.json();
-        setAsteroids(asteroids);
+        const asteroidsInCart: AsteroidOnClient[] = JSON.parse(sessionStorage.getItem('asteroidsInCart') as string);
+
+        setAsteroids(asteroidsInCart);
       } catch (error) {
         const message = error instanceof Error ? error.message : COMMON_ERROR;
         setErrorMessage(message);

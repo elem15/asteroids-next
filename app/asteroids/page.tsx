@@ -3,9 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import AsteroidList from '../components/AsteroidList';
 import Link from 'next/link';
 import styles from './page.module.css';
-import { CART_ERROR, CLOSE_FILED, COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
+import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
 import { declOfNum } from '../utils/deklOfNum';
+import checkInCart from '../utils/checkInCart';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -18,21 +19,20 @@ export default function Asteroids() {
   async function addToCart(asteroid: AsteroidOnClient) {
     setLoading(true);
     try {
-      const res = await fetch('api/cart', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(asteroid),
-      });
-      if (!res.ok) {
-        throw new Error(CART_ERROR);
-      }
+      const asteroidsInCart: AsteroidOnClient[] = JSON.parse(sessionStorage.getItem('asteroidsInCart') as string);
+      asteroidsInCart.push(asteroid);
+      sessionStorage.setItem('asteroidsInCart', JSON.stringify(asteroidsInCart));
+
+      const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
+      ids.push(asteroid.id);
+      sessionStorage.setItem('ids', JSON.stringify(ids));
+
+      sessionStorage.setItem('counter', ids.length + '');
     } catch (error) {
       const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
     }
-    await getCartQuantity();
+    getCartQuantity();
     try {
       const response = await fetch(ASTEROIDS_API_URL);
       if (!response.ok) {
@@ -40,7 +40,9 @@ export default function Asteroids() {
       }
       const data: { asteroidList: AsteroidOnClient[]; } = await response.json();
       const { asteroidList } = data;
-      setAsteroids(asteroidList);
+      const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
+      const asteroids = asteroidList.map((asteroid) => checkInCart(asteroid, ids));
+      setAsteroids(asteroids);
     } catch (error) {
       const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
@@ -56,14 +58,10 @@ export default function Asteroids() {
     });
   }
 
-  async function getCartQuantity() {
+  function getCartQuantity() {
     try {
-      const res = await fetch('api/cart?data=counter');
-      if (!res.ok) {
-        throw new Error(CLOSE_FILED);
-      }
-      const { counter } = await res.json();
-      setCartCounter(counter);
+      const counter = sessionStorage.getItem('counter');
+      counter && setCartCounter(+counter);
     } catch (error) {
       const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
@@ -71,7 +69,9 @@ export default function Asteroids() {
   }
 
   useEffect(() => {
-    getCartQuantity();
+    !sessionStorage.getItem('counter') && sessionStorage.setItem('counter', '0');
+    !sessionStorage.getItem('ids') && sessionStorage.setItem('ids', JSON.stringify([]));
+    !sessionStorage.getItem('asteroidsInCart') && sessionStorage.setItem('asteroidsInCart', JSON.stringify([]));
   }, []);
 
   useEffect(() => {
@@ -98,13 +98,21 @@ export default function Asteroids() {
     async function getData(move = '') {
       setLoading(true);
       try {
-        const response = !move ? await fetch(ASTEROIDS_API_URL) : await fetch(`/api/asteroids?move=${move}`);
+        const response = !move ? await fetch(ASTEROIDS_API_URL) : await fetch(`${ASTEROIDS_API_URL}?move=${move}`);
         if (!response.ok) {
           throw new Error(NASA_ERROR);
         }
         const data: { asteroidList: AsteroidOnClient[], isStart: boolean; } = await response.json();
         const { asteroidList, isStart } = data;
-        setAsteroids(asteroidList);
+
+        const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
+        const counter = sessionStorage.getItem('counter') as string;
+
+        const asteroids = asteroidList.map((asteroid) => checkInCart(asteroid, ids));
+
+        setCartCounter(+counter);
+        setAsteroids(asteroids);
+
         setTimeout(() => {
           if (!move && !isStart) {
             moveScreenUp();
@@ -114,6 +122,7 @@ export default function Asteroids() {
           }
           observerDownObserve();
         }, 900);
+
       } catch (error) {
         const message = error instanceof Error ? error.message : COMMON_ERROR;
         setErrorMessage(message);
