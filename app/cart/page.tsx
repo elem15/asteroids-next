@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Asteroid from '../components/Asteroid';
-import { CART_COUNT_ERROR, COMMON_ERROR } from '@/app/assets/constants/messages';
+import { COMMON_ERROR } from '@/app/assets/constants/messages';
 import { ASTEROIDS_PAGE_URL } from '@/app/assets/constants/urls';
 
 export default function Cart() {

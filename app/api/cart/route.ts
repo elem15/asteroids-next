@@ -8,7 +8,7 @@ type Db = {
   ids: string[],
   counter: number;
 };
-export const db: Db = {
+const db: Db = {
   asteroids: [],
   asteroidsInCart: [],
   ids: [],
