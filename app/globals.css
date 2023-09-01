@@ -78,6 +78,10 @@ a {
   }
 }
 
+li {
+  list-style: none;
+}
+
 .list__title {
   color: var(--White-Base, #FFF);
   font-family: var(--font-helvetica);
@@ -86,6 +90,10 @@ a {
   font-weight: 600;
   line-height: 36px;
   margin-bottom: 8px;
+}
+
+.content__shift {
+  margin-left: 500px;
 }
 
 .spinner {

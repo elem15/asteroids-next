@@ -10,7 +10,7 @@ type Props = {
 export default function AsteroidList({ asteroids, loading, addToCart }: Props) {
   const [measure, setMeasure] = useState<Measure>('km');
   return (
-    <>
+    <div className="content__shift">
       <div className={styles.list__head}>
         <h2 className="list__title">Ближайшие подлёты астероидов</h2>
         <div className={styles.list__toggler}>
@@ -24,6 +24,6 @@ export default function AsteroidList({ asteroids, loading, addToCart }: Props) {
       <ul className={styles.list}>
         {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} loading={loading} addToCart={addToCart} measure={measure} />)}
       </ul>
-    </>
+    </div>
   );
 }

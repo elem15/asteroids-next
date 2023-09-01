@@ -19,12 +19,13 @@ export default function CartWidget({ loading, cartCounter }: Props) {
       </div>
       {cartCounter === 0 ?
         <div className={styles.cart__content}>Миссии не заказаны</div>
-        : <button className={styles.cart__button} disabled={loading}>
-          <Link href={CART_PAGE_URL}>Отправить</Link>
-          {loading && <div className={styles.cart__preloader}>
-            <Image className="spinner" src="/img/Spinner.png" alt="spinner" width={16} height={16} />
-          </div>}
-        </button>
+        : <Link href={CART_PAGE_URL}>
+          <button className={styles.cart__button} disabled={loading}>
+            Отправить
+            {loading && <div className={styles.cart__preloader}>
+              <Image className="spinner" src="/img/Spinner.png" alt="spinner" width={16} height={16} />
+            </div>}
+          </button></Link>
       }
     </div>);
 }

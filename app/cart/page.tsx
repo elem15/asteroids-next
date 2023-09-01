@@ -27,12 +27,14 @@ export default function Cart() {
   return (
     <div>
       <Header />
-      <h2 className="list__title">Заказ отправлен!</h2>
-      <ul>
-        {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} measure='luna' />)}
-      </ul>
-      {loading && <div>Loading...</div>}
-      {errorMessage && <div>{errorMessage}</div>}
+      <div className="content__shift">
+        <h2 className="list__title">Заказ отправлен!</h2>
+        <ul>
+          {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} measure='luna' />)}
+        </ul>
+        {loading && <div>Loading...</div>}
+        {errorMessage && <div>{errorMessage}</div>}
+      </div>
     </div>
   );
 }

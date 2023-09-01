@@ -38,6 +38,7 @@
 }
 
 .list__item__measure {
+  display: inline-block;
   background-image: url('/img/arrow.svg');
   background-repeat: no-repeat;
   background-position: 0% 95%;
