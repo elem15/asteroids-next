@@ -31,7 +31,7 @@
 
 .list {
   display: flex;
-  width: 402px;
+  max-width: 402px;
   flex-direction: column;
   align-items: flex-start;
   gap: 24px;

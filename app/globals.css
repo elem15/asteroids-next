@@ -93,7 +93,19 @@ li {
 }
 
 .content__shift {
-  margin-left: 500px;
+  margin-left: 470px;
+
+  @media (min-width: 701px) and (max-width: 1120px) {
+    margin-left: 340px;
+  }
+
+  @media (max-width: 700px) {
+    margin-left: 170px;
+  }
+
+  @media (max-width: 480px) {
+    margin-left: 70px;
+  }
 }
 
 .spinner {

@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className={styles.earth}><Image src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} /></div>
+        <div><Image className={styles.earth} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} /></div>
         {children}
       </body>
     </html>

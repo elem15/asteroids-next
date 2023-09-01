@@ -7,7 +7,7 @@
 }
 
 .list__head {
-  width: 402px;
+  max-width: 402px;
   margin-bottom: 24px;
 }
 
