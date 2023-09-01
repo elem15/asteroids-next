@@ -10,32 +10,30 @@
   }
 }
 
+.earth:hover {
+  transform: translate(-5px, -5px);
+}
+
 @media (prefers-reduced-motion) {
-  .card:hover span {
+  .earth:hover {
     transform: none;
   }
 }
 
-/* Mobile */
-@media (max-width: 700px) {}
-
-/* Tablet and Smaller Desktop */
-@media (min-width: 701px) and (max-width: 1120px) {}
-
-@media (prefers-color-scheme: dark) {
-  .vercelLogo {
-    filter: invert(1);
-  }
-
-  .logo {
-    filter: invert(1) drop-shadow(0 0 0.3rem #ffffff70);
+@media (max-width: 480px) {
+  .earth:hover {
+    transform: none;
   }
 }
+
+
+@media (prefers-color-scheme: dark) {}
 
 .earth {
   position: fixed;
   z-index: 100;
   top: 138px;
+  transition: transform 500ms ease-in-out;
 
   @media (min-width: 701px) and (max-width: 1120px) {
     height: 436px;
@@ -53,5 +51,4 @@
     width: 304px;
     left: -255px;
   }
-
 }
