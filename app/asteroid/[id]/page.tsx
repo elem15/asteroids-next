@@ -1,7 +1,11 @@
 import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
+import Header from '@/app/components/header/Header';
 import convertAsteroidsFull from '@/app/utils/convertAsteroidsFull';
 import { planets } from '@/app/utils/planets';
 import { notFound } from 'next/navigation';
+import styles from './page.module.css';
+import Image from 'next/image';
+
 
 async function getAsteroid(id: string): Promise<AsteroidFull | null> {
   try {
@@ -23,17 +27,30 @@ export default async function Asteroid({ params }: { params: { id: string; }; })
   const asteroid: AsteroidOnClient = convertAsteroidsFull(res);
   return (
     <div>
-      <h1>Астероид {asteroid.name}</h1>
-      <div>
-        Максимальный диаметр {Math.floor(asteroid.estimated_diameter_max)} м.
+      <Header />
+      <h2 className='list__title' style={{ marginBottom: 0 }}>
+        <span className={styles.asteroid__small}>{asteroid.size === 'small'
+          && <Image src='/img/asteroid-small.png' alt='asteroids' width='22' height='24' />}</span>
+        <span className={styles.asteroid__large}>{asteroid.size === 'large'
+          && <Image src='/img/asteroid-large.png' alt='asteroids' width='37' height='40' />}</span>
+        {asteroid.name}
+      </h2>
+      <div className={styles.title__description}>
+        Ø {Math.floor(asteroid.estimated_diameter_max)} м.
       </div>
-      <h4>Список сближений:</h4>
-      <ul>
+      <h3 className={styles.list__head}>Список сближений:</h3>
+      <ul className={styles.list}>
         {asteroid.close_approach_data?.map((a) => <li key={a.miss_distance_kilometers}>
-          <div>Скорость относительно Земли {a.kilometers_per_hour} км.</div>
-          <div>Момент максимального сближения: {a.close_approach_date}</div>
-          <div>Минимальная дистанция {a.miss_distance_kilometers} км.</div>
-          <div>Вращается по орбите планеты {planets[a.orbiting_body]}.</div>
+          <div className={styles.list__item__header}>
+            {a.close_approach_date}
+          </div>
+          <div>Скорость относительно 🌍 - {a.kilometers_per_hour} км/ч</div>
+          <div className={styles.list__item__measure}>
+            <div>
+              {a.miss_distance_kilometers} км
+            </div>
+          </div>
+          <div>Вращается по орбите {planets[a.orbiting_body]}.</div>
         </li>)}
       </ul>
     </div>

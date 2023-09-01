@@ -1,0 +1,47 @@
+.title__description {
+  font-family: var(--font-helvetica);
+  font-size: 14px;
+  font-style: normal;
+  line-height: 24px;
+}
+
+.list__head {
+  margin: 10px 0;
+  font-family: var(--font-helvetica);
+}
+
+.list__item__header {
+  color: var(--White-Base, #FFF);
+  font-family: var(--font-helvetica);
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.asteroid__small {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.asteroid__large {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.list {
+  display: flex;
+  width: 402px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.list__item__measure {
+  background-image: url('/img/arrow.svg');
+  background-repeat: no-repeat;
+  background-position: 0% 95%;
+  background-size: 140% 8px;
+  width: fit-content;
+  padding: 10px 5px;
+}

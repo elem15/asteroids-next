@@ -78,6 +78,16 @@ a {
   }
 }
 
+.list__title {
+  color: var(--White-Base, #FFF);
+  font-family: var(--font-helvetica);
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 36px;
+  margin-bottom: 8px;
+}
+
 .spinner {
   animation: spin 2s linear infinite;
 }

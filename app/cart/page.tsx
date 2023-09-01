@@ -1,9 +1,8 @@
 'use client';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Asteroid from '../components/asteroid-card/AsteroidCard';
 import { COMMON_ERROR } from '@/app/assets/constants/messages';
-import { ASTEROIDS_PAGE_URL } from '@/app/assets/constants/urls';
+import Header from '../components/header/Header';
 
 export default function Cart() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
@@ -13,7 +12,8 @@ export default function Cart() {
     async function getAsteroidsFromCart() {
       setLoading(true);
       try {
-        const asteroidsInCart: AsteroidOnClient[] = JSON.parse(sessionStorage.getItem('asteroidsInCart') as string);
+        const asteroidsInCart: AsteroidOnClient[]
+          = JSON.parse(sessionStorage.getItem('asteroidsInCart') as string);
 
         setAsteroids(asteroidsInCart);
       } catch (error) {
@@ -26,8 +26,8 @@ export default function Cart() {
   }, []);
   return (
     <div>
-      <h1>Заказ отправлен!</h1>
-      <Link href={ASTEROIDS_PAGE_URL}>Asteroids</Link>
+      <Header />
+      <h2 className="list__title">Заказ отправлен!</h2>
       <ul>
         {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} measure='luna' />)}
       </ul>

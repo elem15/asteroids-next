@@ -15,9 +15,9 @@ export default function Asteroid({ asteroid, loading, addToCart, measure }: Prop
 
   return (
     <li className={styles.list__item}>
-      <div className={styles.list__item__header}>
+      <h4 className={styles.list__item__header}>
         {asteroid.close_approach_date}
-      </div>
+      </h4>
       <div className={styles.list__item__content}>
         <div className={styles.list__item__measure}>
           {measure === 'km' &&
