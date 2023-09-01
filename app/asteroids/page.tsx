@@ -166,7 +166,7 @@ export default function Asteroids() {
       {errorMessage && <div>{errorMessage}</div>}
       <Header />
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
-      {/* <CartWidget loading={loading} cartCounter={cartCounter} /> */}
+      <CartWidget loading={loading} cartCounter={cartCounter} />
       {loading && <div>Loading...</div>}
       {errorMessage && <div>{errorMessage}</div>}
       <div ref={observerTargetDown}></div>

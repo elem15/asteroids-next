@@ -2,6 +2,7 @@ import { declOfNum } from '@/app/utils/deklOfNum';
 import styles from './CartWidget.module.css';
 import Link from 'next/link';
 import { CART_PAGE_URL } from '@/app/assets/constants/urls';
+import Image from 'next/image';
 
 type Props = {
   loading: boolean;
@@ -12,15 +13,18 @@ export default function CartWidget({ loading, cartCounter }: Props) {
 
   return (
     <div className={styles.cart}>
-      <h4>Корзина</h4>
-      {!loading && <>
-        {cartCounter > 0 ?
-          <>
-            <div>{cartCounter} {declOfNum(cartCounter, ['астероид', 'астероида', 'астероидов'])}</div>
-            <Link href={CART_PAGE_URL}>Отправить</Link>
-          </>
-          : <div>Миссии не заказаны</div>
-        }
-      </>}
+      <div>
+        <h4 className={styles.cart__title}>Корзина</h4>
+        <div className={styles.cart__content}>{cartCounter} {declOfNum(cartCounter, ['астероид', 'астероида', 'астероидов'])}</div>
+      </div>
+      {cartCounter === 0 ?
+        <div className={styles.cart__content}>Миссии не заказаны</div>
+        : <button className={styles.cart__button} disabled={loading}>
+          <Link href={CART_PAGE_URL}>Отправить</Link>
+          {loading && <div className={styles.cart__preloader}>
+            <Image className="spinner" src="/img/Spinner.png" alt="spinner" width={16} height={16} />
+          </div>}
+        </button>
+      }
     </div>);
 }

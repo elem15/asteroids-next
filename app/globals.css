@@ -4,6 +4,8 @@
   --Orange-Base: #F86600;
   --Orange-Smooth: rgba(248, 102, 0, 0.15);
   --White-Base: #FFF;
+  --Red-Smooth: #F5DED9;
+  --Red-Deep-Smooth: #ff9d87;
   --max-width: 1600px;
   --border-radius: 12px;
   --font-helvetica: url("assets/fonts/HelveticaNeueLTProLt.otf") format("otf"), 'Courier New';
@@ -73,5 +75,15 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+
+.spinner {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
