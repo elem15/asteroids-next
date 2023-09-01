@@ -55,6 +55,8 @@ export default async function Asteroid({ params }: { params: { id: string; }; })
               <span>- макс. сближение</span>
             </div>
             <div>вращается по орбите {planets[a.orbiting_body]}</div>
+            {a.isDanger && <div className={styles.list__item__danger}>
+              <Image src="/img/danger.png" alt="danger" width={15} height={15} />Опасеное сближение</div>}
           </li>)}
         </ul>
       </div>

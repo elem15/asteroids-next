@@ -1,11 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import AsteroidList from '../components/asteroid-list/AsteroidList';
-import Link from 'next/link';
-import styles from './page.module.css';
 import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
-import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
-import { declOfNum } from '../utils/deklOfNum';
+import { ASTEROIDS_API_URL } from '@/app/assets/constants/urls';
 import checkInCart from '../utils/checkInCart';
 import Header from '../components/header/Header';
 import CartWidget from '../components/cart-widget/CartWidget';
@@ -45,6 +42,7 @@ export default function Asteroids() {
       const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
       const asteroids = asteroidList.map((asteroid) => checkInCart(asteroid, ids));
       setAsteroids(asteroids);
+      setErrorMessage('');
     } catch (error) {
       const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
@@ -114,6 +112,7 @@ export default function Asteroids() {
 
         setCartCounter(+counter);
         setAsteroids(asteroids);
+        setErrorMessage('');
 
         setTimeout(() => {
           if (!move && !isStart) {
@@ -163,12 +162,11 @@ export default function Asteroids() {
   return (
     <div>
       <div ref={observerTargetUp}></div>
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <div className="error__message">{errorMessage}</div>}
       <Header />
       {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
       <CartWidget loading={loading} cartCounter={cartCounter} />
-      {loading && <div>Loading...</div>}
-      {errorMessage && <div>{errorMessage}</div>}
+      {errorMessage && <div className="error__message">{errorMessage}</div>}
       <div ref={observerTargetDown}></div>
     </div>
   );

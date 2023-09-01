@@ -1,3 +1,23 @@
+
+
+# [ARMAGEDDON 2023](https://asteroidnasa.vercel.app)
+________
+This application receives data from NASA. You can view data on asteroids approaching Earth starting today. As well as detailed information about all the approaches of specific asteroids to the Earth. The list is loaded dynamically for two days as you scroll.
+
+The application does not use state managers or context on the client. These two days are stored only on server routes.
+
+An interactive game with adding asteroids to the cart saves the data in sessionStorage in the browser. This data will disappear after the tab is closed.
+
+Unfortunately NASA does not allow more than 50 requests per day.
+___________
+Это приложение получает данные от NASA. Вы можете просмотреть данные об астероидах приближающихся к Земле, начиная с сегодняшнего дня. А также подробную информацию обо всех сближениях конкретных астероидов с Землей. Список подгружается динамически по два дня по мере прокрутки. 
+
+В приложении не используются стейт-менеджеры или Контекст на клиенте. Эти два дня хранятся только на серверных роутах. 
+
+Интерактивная игра с добавлением астероидов в корзину сохраняет данные в sessionStorage в браузере. Эти данные исчезнут после закрытия вкладки.
+
+К сожалению NASA не позволяет делать более 50 запросов в день. 
+____________
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

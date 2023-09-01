@@ -46,3 +46,10 @@
   width: fit-content;
   padding: 10px 5px;
 }
+
+.list__item__danger {
+  color: var(--gray-30, #E3E5E5);
+  font-family: var(--font-helvetica);
+  font-size: 14px;
+  line-height: 30px;
+}
