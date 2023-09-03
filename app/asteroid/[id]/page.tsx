@@ -28,6 +28,7 @@ export default async function Asteroid({ params }: { params: { id: string; }; })
   return (
     <div>
       <Header />
+      <Image className="earth" src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
       <div className="content__shift">
         <h2 className='list__title' style={{ marginBottom: 0 }}>
           <span className={styles.asteroid__small}>{asteroid.size === 'small'

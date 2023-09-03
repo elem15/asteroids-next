@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Asteroid from '../components/asteroid-card/AsteroidCard';
 import { COMMON_ERROR } from '@/app/assets/constants/messages';
 import Header from '../components/header/Header';
@@ -9,6 +9,9 @@ export default function Cart() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [isEarthStatic, setIsEarthStatic] = useState(true);
+  const observerTargetEarth = useRef(null);
+
   useEffect(() => {
     async function getAsteroidsFromCart() {
       setLoading(true);
@@ -26,9 +29,32 @@ export default function Cart() {
     }
     getAsteroidsFromCart();
   }, []);
+
+  useEffect(() => {
+    function observerEarthObserve() {
+      if (observerTargetEarth.current) {
+        observerEarth.observe(observerTargetEarth.current);
+      }
+    };
+    const observerEarth = new IntersectionObserver(
+      () => {
+        setIsEarthStatic(prev => !prev);
+        setTimeout(() => {
+          observerEarthObserve();
+        }, 300);
+      }, {
+      threshold: 1,
+      root: document,
+      rootMargin: "20px",
+    }
+    );
+    observerEarthObserve();
+  }, [observerTargetEarth]);
   return (
     <div>
       <Header />
+      <div ref={observerTargetEarth}></div>
+      <Image className={isEarthStatic ? "earth earth__up" : "earth"} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
       <div className="content__shift">
         {loading && <Image className="spinner" src="/img/Spinner.png" alt="spinner" width={16} height={16} />}
         <h2 className="list__title">Заказ отправлен!</h2>

@@ -186,9 +186,7 @@ export default function Asteroids() {
       {errorMessage && <div className="error__message">{errorMessage}</div>}
       <Header />
       <div ref={observerTargetEarth}></div>
-      <div className="earth__container">
-        <Image className={isEarthStatic ? "earth earth__up" : "earth"} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
-      </div>
+      <Image className={isEarthStatic ? "earth earth__up" : "earth"} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
       <div>
         {loading && asteroids.length === 0 && <Image className="spinner content__shift" src="/img/Spinner.png" alt="spinner" width={16} height={16} />}
         {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
