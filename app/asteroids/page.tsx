@@ -1,20 +1,22 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import AsteroidList from '../components/AsteroidList';
-import Link from 'next/link';
-import styles from './page.module.css';
+import AsteroidList from '../components/asteroid-list/AsteroidList';
 import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
-import { ASTEROIDS_API_URL, CART_PAGE_URL } from '@/app/assets/constants/urls';
-import { declOfNum } from '../utils/deklOfNum';
+import { ASTEROIDS_API_URL } from '@/app/assets/constants/urls';
 import checkInCart from '../utils/checkInCart';
+import Header from '../components/header/Header';
+import CartWidget from '../components/cart-widget/CartWidget';
+import Image from 'next/image';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [cartCounter, setCartCounter] = useState(0);
+  const [isEarthStatic, setIsEarthStatic] = useState(true);
   const observerTargetDown = useRef(null);
   const observerTargetUp = useRef(null);
+  const observerTargetEarth = useRef(null);
 
   async function addToCart(asteroid: AsteroidOnClient) {
     setLoading(true);
@@ -43,6 +45,7 @@ export default function Asteroids() {
       const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
       const asteroids = asteroidList.map((asteroid) => checkInCart(asteroid, ids));
       setAsteroids(asteroids);
+      setErrorMessage('');
     } catch (error) {
       const message = error instanceof Error ? error.message : COMMON_ERROR;
       setErrorMessage(message);
@@ -75,26 +78,33 @@ export default function Asteroids() {
   }, []);
 
   useEffect(() => {
-    const observerDownUnobserve = () => {
+    function observerDownUnobserve() {
       if (observerTargetDown.current) {
         observerDown.unobserve(observerTargetDown.current);
       }
     };
-    const observerDownObserve = () => {
+    function observerDownObserve() {
       if (observerTargetDown.current) {
         observerDown.observe(observerTargetDown.current);
       }
     };
-    const observerUpUnobserve = () => {
+    function observerUpUnobserve() {
       if (observerTargetUp.current) {
         observerUp.unobserve(observerTargetUp.current);
       }
     };
-    const observerUpObserve = () => {
+    function observerUpObserve() {
       if (observerTargetUp.current) {
         observerUp.observe(observerTargetUp.current);
       }
     };
+
+    function observerEarthObserve() {
+      if (observerTargetEarth.current) {
+        observerEarth.observe(observerTargetEarth.current);
+      }
+    };
+
     async function getData(move = '') {
       setLoading(true);
       try {
@@ -112,6 +122,7 @@ export default function Asteroids() {
 
         setCartCounter(+counter);
         setAsteroids(asteroids);
+        setErrorMessage('');
 
         setTimeout(() => {
           if (!move && !isStart) {
@@ -152,32 +163,36 @@ export default function Asteroids() {
         }
       }, options
     );
+
+    const observerEarth = new IntersectionObserver(
+      () => {
+        setIsEarthStatic(prev => !prev);
+        setTimeout(() => {
+          observerEarthObserve();
+        }, 300);
+      }, options
+    );
+
     async function firstLoading() {
       await getData();
     }
     if (!asteroids.length) firstLoading();
+    observerEarthObserve();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [observerTargetDown]);
+  }, [observerTargetDown, observerTargetEarth]);
   return (
     <div>
       <div ref={observerTargetUp}></div>
-      {errorMessage && <div>{errorMessage}</div>}
-      <h1>Asteroids</h1>
-      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
-      <div className={styles.cart}>
-        <h4>Корзина</h4>
-        {!loading && <>
-          {cartCounter > 0 ?
-            <>
-              <div>{cartCounter} {declOfNum(cartCounter, ['астероид', 'астероида', 'астероидов'])}</div>
-              <Link href={CART_PAGE_URL}>Отправить</Link>
-            </>
-            : <div>Миссии не заказаны</div>
-          }
-        </>}
+      {errorMessage && <div className="error__message">{errorMessage}</div>}
+      <Header />
+      <div ref={observerTargetEarth}></div>
+      <Image className={isEarthStatic ? "earth earth__up" : "earth"} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
+      <div>
+        {loading && asteroids.length === 0 && <Image className="spinner content__shift" src="/img/Spinner.png" alt="spinner" width={16} height={16} />}
+        {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
+        {errorMessage && <div className="error__message">{errorMessage}</div>}
       </div>
-      {loading && <div>Loading...</div>}
-      {errorMessage && <div>{errorMessage}</div>}
+      <CartWidget loading={loading} cartCounter={cartCounter} />
       <div ref={observerTargetDown}></div>
     </div>
   );

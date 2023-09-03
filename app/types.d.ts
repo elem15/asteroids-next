@@ -58,7 +58,7 @@ interface AsteroidOnClient {
   size: 'large' | 'small';
   close_approach_data?: ApproachOnClient[];
   isInCart?: boolean;
-  isDanger: Boolean;
+  isDanger?: Boolean;
 };
 
 
@@ -83,6 +83,7 @@ interface ApproachOnClient {
   close_approach_date: string,
   miss_distance_kilometers: string,
   orbiting_body: 'Earth' | 'Venus' | 'Mars' | 'Jupiter';
+  isDanger?: boolean;
 }
 
 interface AsteroidApproach {

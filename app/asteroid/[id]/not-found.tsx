@@ -4,12 +4,10 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <div>
-      <h1>
-        {NASA_ERROR}
-      </h1>
       <h2>
-        <Link href='/asteroids'>На главную</Link>
+        Астероид не найден в базе
       </h2>
+      <Link href='/asteroids'>На главную</Link>
     </div>
   );
 }
