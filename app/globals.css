@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Passion+One&display=swap');
 
+@media (prefers-color-scheme: dark) {}
+
 :root {
   --Orange-Base: #F86600;
   --Orange-Smooth: rgba(248, 102, 0, 0.15);
@@ -99,6 +101,18 @@ li {
   text-align: right;
 }
 
+.spinner {
+  animation: spin 2s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
 .content__shift {
   margin-left: 470px;
 
@@ -115,13 +129,63 @@ li {
   }
 }
 
-.spinner {
-  animation: spin 2s linear infinite;
-  display: inline-block;
+
+.earth__container {
+  width: 400px;
 }
 
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
+.earth__intersection {
+  position: fixed;
+  top: 0
+}
+
+.target {
+  width: 100%;
+  height: 10px;
+  background-color: red;
+  position: relative;
+}
+
+.earth__up.earth {
+  top: 84px;
+}
+
+.earth {
+  position: fixed;
+  z-index: 100;
+  top: 148px;
+  transition: all 300ms ease-in-out;
+
+  @media (min-width: 701px) and (max-width: 1120px) {
+    height: 436px;
+    width: 304px;
+  }
+
+  @media (min-width: 481px) and (max-width: 700px) {
+    height: 436px;
+    width: 304px;
+    left: -150px;
+  }
+
+  @media (max-width: 480px) {
+    height: 436px;
+    width: 304px;
+    left: -255px;
+  }
+}
+
+.earth:hover {
+  transform: translate(-5px, -5px);
+}
+
+@media (prefers-reduced-motion) {
+  .earth:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .earth:hover {
+    transform: none;
   }
 }

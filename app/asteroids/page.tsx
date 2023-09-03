@@ -6,14 +6,17 @@ import { ASTEROIDS_API_URL } from '@/app/assets/constants/urls';
 import checkInCart from '../utils/checkInCart';
 import Header from '../components/header/Header';
 import CartWidget from '../components/cart-widget/CartWidget';
+import Image from 'next/image';
 
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [cartCounter, setCartCounter] = useState(0);
+  const [isEarthStatic, setIsEarthStatic] = useState(true);
   const observerTargetDown = useRef(null);
   const observerTargetUp = useRef(null);
+  const observerTargetEarth = useRef(null);
 
   async function addToCart(asteroid: AsteroidOnClient) {
     setLoading(true);
@@ -75,26 +78,33 @@ export default function Asteroids() {
   }, []);
 
   useEffect(() => {
-    const observerDownUnobserve = () => {
+    function observerDownUnobserve() {
       if (observerTargetDown.current) {
         observerDown.unobserve(observerTargetDown.current);
       }
     };
-    const observerDownObserve = () => {
+    function observerDownObserve() {
       if (observerTargetDown.current) {
         observerDown.observe(observerTargetDown.current);
       }
     };
-    const observerUpUnobserve = () => {
+    function observerUpUnobserve() {
       if (observerTargetUp.current) {
         observerUp.unobserve(observerTargetUp.current);
       }
     };
-    const observerUpObserve = () => {
+    function observerUpObserve() {
       if (observerTargetUp.current) {
         observerUp.observe(observerTargetUp.current);
       }
     };
+
+    function observerEarthObserve() {
+      if (observerTargetEarth.current) {
+        observerEarth.observe(observerTargetEarth.current);
+      }
+    };
+
     async function getData(move = '') {
       setLoading(true);
       try {
@@ -153,20 +163,38 @@ export default function Asteroids() {
         }
       }, options
     );
+
+    const observerEarth = new IntersectionObserver(
+      () => {
+        setIsEarthStatic(prev => !prev);
+        setTimeout(() => {
+          observerEarthObserve();
+        }, 300);
+      }, options
+    );
+
     async function firstLoading() {
       await getData();
     }
     if (!asteroids.length) firstLoading();
+    observerEarthObserve();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [observerTargetDown]);
+  }, [observerTargetDown, observerTargetEarth]);
   return (
     <div>
       <div ref={observerTargetUp}></div>
       {errorMessage && <div className="error__message">{errorMessage}</div>}
       <Header />
-      {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
+      <div ref={observerTargetEarth}></div>
+      <div className="earth__container">
+        <Image className={isEarthStatic ? "earth earth__up" : "earth"} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
+      </div>
+      <div>
+        {loading && asteroids.length === 0 && <Image className="spinner content__shift" src="/img/Spinner.png" alt="spinner" width={16} height={16} />}
+        {asteroids && asteroids.length > 0 && <AsteroidList asteroids={asteroids} loading={loading} addToCart={addToCart} />}
+        {errorMessage && <div className="error__message">{errorMessage}</div>}
+      </div>
       <CartWidget loading={loading} cartCounter={cartCounter} />
-      {errorMessage && <div className="error__message">{errorMessage}</div>}
       <div ref={observerTargetDown}></div>
     </div>
   );

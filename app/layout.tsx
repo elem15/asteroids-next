@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Armageddon',
-  description: 'Save planet from asteroids',
+  description: 'Save the planet from asteroids',
 };
 
 export default function RootLayout({
@@ -19,7 +19,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div><Image className={styles.earth} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} /></div>
         {children}
       </body>
     </html>
