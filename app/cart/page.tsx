@@ -39,9 +39,6 @@ export default function Cart() {
     const observerEarth = new IntersectionObserver(
       () => {
         setIsEarthStatic(prev => !prev);
-        setTimeout(() => {
-          observerEarthObserve();
-        }, 300);
       }, {
       threshold: 1,
       root: document,

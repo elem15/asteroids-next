@@ -167,9 +167,6 @@ export default function Asteroids() {
     const observerEarth = new IntersectionObserver(
       () => {
         setIsEarthStatic(prev => !prev);
-        setTimeout(() => {
-          observerEarthObserve();
-        }, 300);
       }, options
     );
 
