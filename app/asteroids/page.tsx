@@ -8,12 +8,28 @@ import Header from '../components/header/Header';
 import CartWidget from '../components/cart-widget/CartWidget';
 import Image from 'next/image';
 
+interface IncomingDates {
+  prevDate?: string;
+  selfDateStart?: string;
+  selfDateEnd?: string;
+  nextDate?: string;
+  isStart?: boolean;
+}
+
+interface NextResponseData extends IncomingDates {
+  asteroidList: AsteroidOnClient[];
+};
+
 export default function Asteroids() {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [cartCounter, setCartCounter] = useState(0);
   const [isEarthStatic, setIsEarthStatic] = useState(true);
+  // const [incomingDates, setIncomingDates] = useState<IncomingDates>({
+  //   nextDate: '', prevDate: '', selfDateStart: '', selfDateEnd: '', isStart: true
+  // });
+  const [counterEx, setCounter] = useState(1);
   const observerTargetDown = useRef(null);
   const observerTargetUp = useRef(null);
   const observerTargetEarth = useRef(null);
@@ -36,7 +52,8 @@ export default function Asteroids() {
     }
     getCartQuantity();
     try {
-      const response = await fetch(ASTEROIDS_API_URL);
+      const incomingDates: IncomingDates = JSON.parse(sessionStorage.getItem('dates') as string);
+      const response = await fetch(`${ASTEROIDS_API_URL}?start_date=${incomingDates.selfDateStart}&end_date=${incomingDates.selfDateEnd}`);
       if (!response.ok) {
         throw new Error(NASA_ERROR);
       }
@@ -75,6 +92,9 @@ export default function Asteroids() {
     !sessionStorage.getItem('counter') && sessionStorage.setItem('counter', '0');
     !sessionStorage.getItem('ids') && sessionStorage.setItem('ids', JSON.stringify([]));
     !sessionStorage.getItem('asteroidsInCart') && sessionStorage.setItem('asteroidsInCart', JSON.stringify([]));
+    !sessionStorage.getItem('dates') && sessionStorage.setItem('dates', JSON.stringify({
+      nextDate: '', prevDate: '', selfDateStart: '', selfDateEnd: '', isStart: true
+    }));
   }, []);
 
   useEffect(() => {
@@ -104,17 +124,26 @@ export default function Asteroids() {
         observerEarth.observe(observerTargetEarth.current);
       }
     };
-
     async function getData(move = '') {
       setLoading(true);
+      const incomingDates: IncomingDates = JSON.parse(sessionStorage.getItem('dates') as string);
+      if (incomingDates.isStart && move === 'up') return;
       try {
-        const response = !move ? await fetch(ASTEROIDS_API_URL) : await fetch(`${ASTEROIDS_API_URL}?move=${move}`);
+        const response = !move
+          ? await fetch(`${ASTEROIDS_API_URL}?start_date=${incomingDates.selfDateStart}&end_date=${incomingDates.selfDateEnd}`)
+          : move === 'up'
+            ? await fetch(`${ASTEROIDS_API_URL}?start_date=${incomingDates.prevDate}&end_date=${incomingDates.selfDateStart}`)
+            : await fetch(`${ASTEROIDS_API_URL}?start_date=${incomingDates.selfDateEnd}&end_date=${incomingDates.nextDate}`);
+
         if (!response.ok) {
           throw new Error(NASA_ERROR);
         }
-        const data: { asteroidList: AsteroidOnClient[], isStart: boolean; } = await response.json();
-        const { asteroidList, isStart } = data;
-
+        const data: NextResponseData = await response.json();
+        const { asteroidList, nextDate, prevDate, selfDateStart, selfDateEnd, isStart } = data;
+        if (nextDate && prevDate && selfDateEnd && selfDateStart) {
+          sessionStorage.setItem('dates', JSON.stringify({ nextDate, prevDate, selfDateStart, selfDateEnd, isStart }));
+        }
+        setCounter((prev) => prev + 1);
         const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
         const counter = sessionStorage.getItem('counter') as string;
 
@@ -176,7 +205,9 @@ export default function Asteroids() {
     if (!asteroids.length) firstLoading();
     observerEarthObserve();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [observerTargetDown, observerTargetEarth]);
+  }, [
+    observerTargetDown, observerTargetEarth
+  ]);
   return (
     <div>
       <div ref={observerTargetUp}></div>
