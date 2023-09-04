@@ -29,7 +29,6 @@ export default function Asteroids() {
   // const [incomingDates, setIncomingDates] = useState<IncomingDates>({
   //   nextDate: '', prevDate: '', selfDateStart: '', selfDateEnd: '', isStart: true
   // });
-  const [counterEx, setCounter] = useState(1);
   const observerTargetDown = useRef(null);
   const observerTargetUp = useRef(null);
   const observerTargetEarth = useRef(null);
@@ -143,7 +142,6 @@ export default function Asteroids() {
         if (nextDate && prevDate && selfDateEnd && selfDateStart) {
           sessionStorage.setItem('dates', JSON.stringify({ nextDate, prevDate, selfDateStart, selfDateEnd, isStart }));
         }
-        setCounter((prev) => prev + 1);
         const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
         const counter = sessionStorage.getItem('counter') as string;
 

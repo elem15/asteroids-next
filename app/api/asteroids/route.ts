@@ -3,6 +3,14 @@ import convertAsteroids from '@/app/utils/convertAsteroids';
 import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
 import { NASA_BASE_URL } from '@/app/assets/constants/urls';
 
+export const dynamic = 'auto';
+export const dynamicParams = true;
+export const revalidate = false;
+export const fetchCache = 'auto';
+export const runtime = 'nodejs';
+export const preferredRegion = 'auto';
+export const maxDuration = 5;
+
 let asteroidList: AsteroidOnClient[] = [];
 
 let prevDate = '';
@@ -13,21 +21,13 @@ const date = new Date();
 const currentDate = date.toJSON().slice(0, 10);
 date.setDate(date.getDate() + 1);
 const tomorrow = date.toJSON().slice(0, 10);
-function resetDate() {
-  prevDate = currentDate;
-  selfDateStart = currentDate;
-  selfDateEnd = currentDate;
-  nextDate = tomorrow;
-  asteroidList = [];
-}
-resetDate();
 
 export async function GET(request: NextRequest) {
   const startDate = request.nextUrl.searchParams.get('start_date');
   const endDate = request.nextUrl.searchParams.get('end_date');
 
   if (selfDateStart === startDate && asteroidList.length) {
-    return NextResponse.json({ asteroidList });
+    return NextResponse.json({ asteroidList, isStart: selfDateStart === currentDate });
   }
   try {
     const res =
