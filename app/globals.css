@@ -115,6 +115,8 @@ li {
 
 .content__shift {
   margin-left: 470px;
+  z-index: 20;
+  position: relative;
 
   @media (min-width: 701px) and (max-width: 1120px) {
     margin-left: 340px;
