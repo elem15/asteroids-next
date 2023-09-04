@@ -1,4 +1,3 @@
-import { NASA_ERROR } from '@/app/assets/constants/messages';
 import Link from 'next/link';
 
 export default function NotFound() {
