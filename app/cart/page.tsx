@@ -5,7 +5,7 @@ import { COMMON_ERROR } from '@/app/assets/constants/messages';
 import Header from '../components/header/Header';
 import Image from 'next/image';
 
-export default function Cart() {
+export default function Cart({ params }: { params: { id: string; }; }) {
   const [asteroids, setAsteroids] = useState<AsteroidOnClient[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -54,6 +54,7 @@ export default function Cart() {
       <Image className={isEarthStatic ? "earth earth__up" : "earth"} src="/img/planeta_zemlia.jpg" alt="earth" width={400} height={620} />
       <div className="content__shift">
         {loading && <Image className="spinner" src="/img/Spinner.png" alt="spinner" width={16} height={16} />}
+        <h3>{params.id}</h3>
         <h2 className="list__title">Заказ отправлен!</h2>
         <ul>
           {asteroids.map((item) => <Asteroid key={item.id} asteroid={item} measure='luna' />)}
