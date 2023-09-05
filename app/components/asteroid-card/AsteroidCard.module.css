@@ -48,7 +48,7 @@
 
 .list__item__size {
   color: var(--White-Base, #FFF);
-  font-family: var(--font-helvetica);
+
   font-size: 12px;
   line-height: 16px;
 }

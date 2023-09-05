@@ -10,11 +10,10 @@
   --Red-Deep-Smooth: #ff9d87;
   --max-width: 1600px;
   --border-radius: 12px;
-  --font-helvetica: url("assets/fonts/HelveticaNeueLTProLt.otf") format("otf"), 'Courier New';
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
     'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
-
+  --font-helvetica: url("assets/fonts/HelveticaNeueLTProLt.otf") format("otf"), var(--font-mono);
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -95,10 +94,16 @@ li {
 }
 
 .error__message {
-  color: var(--White-Base, #FFF);
-  font-family: var(--font-helvetica);
-  font-size: 28px;
-  text-align: right;
+  color: red;
+  text-shadow: #ffffff 0px 0px 3px;
+  -webkit-font-smoothing: antialiased;
+  margin: 10px auto;
+  text-align: center;
+  font-size: 48px;
+  z-index: 40;
+  top: 40vh;
+  width: 100%;
+  position: fixed;
 }
 
 .spinner {

@@ -8,4 +8,5 @@
   color: var(--White-Base, #FFF);
   font-family: var(--font-helvetica);
   font-size: 16px;
+  z-index: 30;
 }
