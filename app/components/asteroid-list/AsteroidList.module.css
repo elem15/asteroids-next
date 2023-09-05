@@ -1,0 +1,35 @@
+.list {
+  display: flex;
+  width: 402px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.list__head {
+  max-width: 402px;
+  margin-bottom: 24px;
+}
+
+.list__toggler {
+  font-family: var(--font-helvetica);
+  font-size: 14px;
+  font-style: normal;
+  line-height: 24px;
+}
+
+.list__toggler__button {
+  color: var(--White-Base, #FFF);
+  font-size: 16px;
+  font-weight: 300;
+  text-decoration: underline;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  cursor: pointer;
+}
+
+.list__toggler__button:disabled {
+  font-weight: 700;
+  text-decoration: none;
+  cursor: auto
+}

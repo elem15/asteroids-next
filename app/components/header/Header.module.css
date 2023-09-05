@@ -1,0 +1,38 @@
+.header {
+  display: flex;
+  width: 375px;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  z-index: 10;
+  position: relative;
+}
+
+.header__title {
+  color: var(--Orange-Base);
+  font-family: 'Passion One', 'Arial Condensed', 'Onyx', 'Arial';
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.header__content {
+  color: var(--White-Base);
+  font-family: var(--font-helvetica);
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+}
+
+.figure {
+  width: 50px;
+  height: 50px;
+  background-color: red;
+  position: sticky;
+  position: -webkit-sticky;
+  top: 20px;
+  left: 20px;
+}
