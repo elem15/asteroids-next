@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import Header from '../header/Header';
+import Header from '../../components/header/Header';
 import Image from 'next/image';
 
 export default function AsteroidApproachesWrapper({ children }: { children: React.ReactNode; }) {
