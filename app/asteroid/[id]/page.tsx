@@ -5,10 +5,11 @@ import { planets } from '@/app/utils/planets';
 import { notFound } from 'next/navigation';
 import styles from './page.module.css';
 import Image from 'next/image';
+import { NASA_BASE_URL } from '@/app/assets/constants/urls';
 
 async function getAsteroid(id: string): Promise<AsteroidFull | null> {
   try {
-    const res = await fetch(`https://api.nasa.gov/neo/rest/v1/neo/${id}?api_key=DEMO_KEY`);
+    const res = await fetch(`${NASA_BASE_URL}/neo/${id}?api_key=DEMO_KEY`);
     if (!res.ok) throw new Error(NASA_ERROR);
     return res.json();
   } catch (err) {
