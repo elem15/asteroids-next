@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 import convertAsteroids from '@/app/utils/convertAsteroids';
-import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
-import { NASA_BASE_URL } from '@/app/assets/constants/urls';
+import {COMMON_ERROR, NASA_ERROR} from '@/app/assets/constants/messages';
+import {NASA_BASE_URL} from '@/app/assets/constants/urls';
 
 // export const dynamic = 'auto';
 // export const dynamicParams = true;
@@ -27,13 +27,13 @@ export async function GET(request: NextRequest) {
   const endDate = request.nextUrl.searchParams.get('end_date');
 
   if (selfDateStart === startDate && asteroidList.length) {
-    return NextResponse.json({ asteroidList, isStart: selfDateStart === currentDate });
+    return NextResponse.json({asteroidList, isStart: selfDateStart === currentDate});
   }
   try {
     const res =
       startDate && endDate ?
-        await fetch(`${NASA_BASE_URL}/feed?start_date=${startDate}&end_date=${endDate}&api_key=DEMO_KEY`)
-        : await fetch(`${NASA_BASE_URL}/feed?start_date=${currentDate}&end_date=${tomorrow}&api_key=DEMO_KEY`);
+        await fetch(`${NASA_BASE_URL}/feed?start_date=${startDate}&end_date=${endDate}&api_key=${process.env.API_KEY}`)
+        : await fetch(`${NASA_BASE_URL}/feed?start_date=${currentDate}&end_date=${tomorrow}&api_key=${process.env.API_KEY}`);
 
     const data: ResponseData = await res.json();
     if (!res.ok) {
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     selfDateStart = data.links.previous.split('=')[2].split('&')[0];
     selfDateEnd = data.links.next.split('=')[1].split('&')[0];
     nextDate = data.links.next.split('=')[2].split('&')[0];
-    return NextResponse.json({ asteroidList, prevDate, selfDateStart, selfDateEnd, nextDate, isStart: selfDateStart === currentDate });
+    return NextResponse.json({asteroidList, prevDate, selfDateStart, selfDateEnd, nextDate, isStart: selfDateStart === currentDate});
   } catch (error) {
     const message = error instanceof Error ? error.message : COMMON_ERROR;
     console.error(message);

@@ -1,8 +1,8 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import AsteroidList from '../components/asteroid-list/AsteroidList';
-import { COMMON_ERROR, NASA_ERROR } from '@/app/assets/constants/messages';
-import { ASTEROIDS_API_URL } from '@/app/assets/constants/urls';
+import {COMMON_ERROR, NASA_ERROR} from '@/app/assets/constants/messages';
+import {ASTEROIDS_API_URL} from '@/app/assets/constants/urls';
 import checkInCart from '../utils/checkInCart';
 import CartWidget from '../components/cart-widget/CartWidget';
 import Image from 'next/image';
@@ -47,8 +47,8 @@ export default function Asteroids() {
       if (!response.ok) {
         throw new Error(NASA_ERROR);
       }
-      const data: { asteroidList: AsteroidOnClient[]; } = await response.json();
-      const { asteroidList } = data;
+      const data: {asteroidList: AsteroidOnClient[];} = await response.json();
+      const {asteroidList} = data;
       const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
       const asteroids = asteroidList.map((asteroid) => checkInCart(asteroid, ids));
       setAsteroids(asteroids);
@@ -124,9 +124,9 @@ export default function Asteroids() {
           throw new Error(NASA_ERROR);
         }
         const data: NextResponseData = await response.json();
-        const { asteroidList, nextDate, prevDate, selfDateStart, selfDateEnd, isStart } = data;
+        const {asteroidList, nextDate, prevDate, selfDateStart, selfDateEnd, isStart} = data;
         if (nextDate && prevDate && selfDateEnd && selfDateStart) {
-          sessionStorage.setItem('dates', JSON.stringify({ nextDate, prevDate, selfDateStart, selfDateEnd, isStart }));
+          sessionStorage.setItem('dates', JSON.stringify({nextDate, prevDate, selfDateStart, selfDateEnd, isStart}));
         }
         const ids: string[] = JSON.parse(sessionStorage.getItem('ids') as string);
         const counter = sessionStorage.getItem('counter') as string;
@@ -142,7 +142,7 @@ export default function Asteroids() {
             moveScreenUp();
           }
           if (!isStart) {
-            setTimeout(() => { observerUpObserve(); }, 500);
+            setTimeout(() => {observerUpObserve();}, 500);
           }
           observerDownObserve();
         }, 900);
@@ -191,7 +191,7 @@ export default function Asteroids() {
 
   return (
     <div>
-      <div style={{ position: 'absolute', top: '0px' }} ref={observerTargetUp}></div>
+      <div style={{position: 'absolute', top: '0px'}} ref={observerTargetUp}></div>
       {errorMessage && <div className="error__message">{errorMessage}</div>}
       <div>
         {loading && asteroids.length === 0 && <Image className="spinner content__shift" src="/img/Spinner.png" alt="spinner" width={16} height={16} />}

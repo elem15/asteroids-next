@@ -9,7 +9,7 @@ import { NASA_BASE_URL } from '@/app/assets/constants/urls';
 
 async function getAsteroid(id: string): Promise<AsteroidFull | null> {
   try {
-    const res = await fetch(`${NASA_BASE_URL}/neo/${id}?api_key=DEMO_KEY`);
+    const res = await fetch(`${NASA_BASE_URL}/neo/${id}?api_key=${process.env.API_KEY}`);
     if (!res.ok) throw new Error(NASA_ERROR);
     return res.json();
   } catch (err) {
